@@ -140,7 +140,7 @@ These are notes on Version 1 which was pre-binocular MODS operation.
     and MODS2 guide-probe positions for the different WFS pickoff optics
     then in MODS1 and MODS2.  After we updated the MODS1 WFS pickoff
     optics to be the same as MODS2 in October 2016, this version was
-    retired, and must numbe used.
+    retired, and must not be used.
 
 <dt>Version 1.6 (2015 Jan 22) - new features
 <dd>Added additional interaction to the --find feature for guide star
@@ -223,7 +223,7 @@ These are notes on Version 1 which was pre-binocular MODS operation.
 
 ## Credits & Future Revisions
 
-odsView was based on an earlier, nasty bit of Perl code that made a
+modsView was based on an earlier, nasty bit of Perl code that made a
 DS9 regions file you could then load by hand (or via xpaset from the
 shell).  It was developed mostly for planning purposes early in the
 MODS project, but not developed further until we started MODS on-sky
