@@ -46,7 +46,7 @@ available online at [www.astronomy.ohio-state.edu/MODS/ObsTools/modsView/](www.a
 ## System Requirements
 
 modsView is written in Python and has been tested on the Linux (CentOS
-5.x and 6.x) and Mac OS X (v10.7 Lion and v10.8 Mountain Lion)
+5.x and 6.x) and Mac OS X (v10.7 Lion and v10.13 High Sierra)
 operating systems.  Python 2.3 or later is required, and the programs
 have been used primarily with Python versions 2.3 through 2.7 to date.
 
