@@ -53,7 +53,7 @@ have been used primarily with Python versions 2.3 through 2.7 to date.
 modsView requires the following packages:
 
  * [pyds9](https://github.com/ericmandel/pyds9)
- * [ds9](http://ds9.si.edu/site/Home.htmhttp://ds9.si.edu/site/Download.html) - version 7.2 or later
+ * [ds9](http://ds9.si.edu/site/Download.html) - version 7.2 or later
  * [xpa](http://ds9.si.edu/site/XPA.html) - version 2.1.14 or later
 
 ### Python 3 Compatibility
