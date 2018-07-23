@@ -90,7 +90,6 @@
 #
 #---------------------------------------------------------------------------
 
-#import string
 import sys
 import os
 import readline
