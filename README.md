@@ -4,7 +4,7 @@ MODS Target Visualization and Guide Star Selection Tool
 ## Overview
 
 modsView is a Python program that uses DS9 to view and verify the
-target and guide star information in a MODS target aquisition (.acq)
+target and guide star information in a MODS target acquisition (.acq)
 or imaging (.img) script.  It displays a digitized sky survey image of
 the field in DS9 and overlays the outlines of the MODS focal plane
 (science field, AGw patrol field, and any slit apertures), as well as
