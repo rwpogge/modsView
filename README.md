@@ -101,6 +101,10 @@ This is the current operational version of modsView to support MODS1+MODS2
 Binocular operations
 
 <dl>
+<dt>Version 2.1p6 (2018 Sep 05) - Python 3 fixes
+<dd>Fixed bug in Python 3 compatibility (raw_input instead of input). Caught by Johnny Greco, tested
+    on iMac running MacOS HighSierra and anaconda python 3.6.5
+
 <dt>Verison 2.1p4 (2018 May 22) - SNS Masks
 <dd>Support for experimental SNS masks, will not impact normal users
 
