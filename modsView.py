@@ -87,6 +87,7 @@
 #   2018 May 22 - Support for experimental SNS masks [rwp/osu]
 #   2018 Jul 22 - Patches for Python 3 & MacOS operation, first release
 #                 using GitHub [rwp/osu]
+#   2018 Sep 05 - fixed input/raw_input problem P2/3 issue [rwp/osu]
 #
 #---------------------------------------------------------------------------
 
@@ -107,10 +108,17 @@ try:
 except:
     import ds9
 
+# input vs raw_input for Python 3/2 compatibility
+
+try:
+    input = raw_input
+except NameError:
+    pass
+
 # Version number and date, update as needed
 
-versNum  = '2.1.5'
-versDate = '2018-07-22'
+versNum  = '2.1.6'
+versDate = '2018-09-05'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -1571,7 +1579,7 @@ if showCat:
 
         while not hasPicked:
             pStr = 'Select a guide star (0 to abort): '
-            s = raw_input(pStr)
+            s = input(pStr)
             try:
                 iPick = int(s)-1
                 if iPick == -1:
@@ -1751,7 +1759,7 @@ if interact:
             else:
                 print('\nCurrent Magnitude Limits: %.1f to %.1f' % (minMag,maxMag))
                 pStr = '  New faint limit  [%.1f] > ' % (minMag)
-                s = raw_input(pStr)
+                s = input(pStr)
                 try:
                     newMin = float(s)
                     minMag = newMin
@@ -1759,7 +1767,7 @@ if interact:
                     if len(s)> 0:
                         print('%s is not a valid number, still using faint limit = %.1f mag' % (s,minMag))
                 pStr = '  New bright limit [%.1f] > ' % (maxMag)
-                s = raw_input(pStr)
+                s = input(pStr)
                 try:
                     newMax = float(s)
                     maxMag = newMax
@@ -1781,7 +1789,7 @@ if interact:
         elif cursKey.lower() == 'p':
             print('\nChange Slit Mask Position Angle:\n')
             pStr = '  New Slit PA [%.2f] > ' % (posAng)
-            s = raw_input(pStr)
+            s = input(pStr)
             try:
                 newPA = float(s)
                 if newPA>-270.0 and newPA<270.0:
