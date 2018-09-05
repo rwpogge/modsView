@@ -156,7 +156,6 @@ defSurvey  = 'all'   # default is the STScI composite survey image catalog
 #
 
 def sex2dec(inStr):
-    #bits = string.split(inStr, ':')
     bits = inStr.split(':')
     dsign = 1.0
     major = float(bits[0])
@@ -1054,7 +1053,7 @@ for opt, arg in opts:
     elif opt in ('-c','--catalog','--cat'):
         showCat = True
         starCat = arg
-        if not string.lower(starCat) in ('ua2','ub1','nomad'):
+        if not starCat.lower() in ('ua2','ub1','nomad'):
             print('\n** ERROR: unrecognized star catalog %s, must be nomad, ub1, or ua2\n' % (starCat))
             sys.exit(1)
     elif opt in ('--kill'):
@@ -1292,7 +1291,7 @@ else:
 
 # Star catalog magnitude to use for filtering
 
-if starCat=='nomad' or starCat=='ua2':
+if starCat.lower()=='nomad' or starCat.lower()=='ua2':
     if catFilt == 'R':
         starMag = 'Rmag'  # NOMAD1 or USNOA2.0 R magnitude field
     else:
