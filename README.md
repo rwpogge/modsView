@@ -59,8 +59,8 @@ modsView requires the following packages:
 ### Python 3 Compatibility
 
 The current version has been verified to run on Python 3 (v3.6.5,
-anaconda distro), using the latest releases of pyds9.  Your mileage
-may vary...
+anaconda distro), using the latest releases of pyds9. Still finding
+bugs, so your mileage may vary (but it's getting better).
 
 ## Installation
 
