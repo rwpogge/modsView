@@ -40,8 +40,9 @@ image servers, add a grid, and make other minor changes.
 
 ## Documentation
 
-An illustrated user's guide and downloads of the latest version are
-available online at [www.astronomy.ohio-state.edu/MODS/ObsTools/modsView/](www.astronomy.ohio-state.edu/MODS/ObsTools/modsView), but will migrate off that platform in the future.
+An illustrated user's guide and downloads of the latest version are available online at 
+[www.astronomy.ohio-state.edu/MODS/ObsTools/modsView/](http://www.astronomy.ohio-state.edu/MODS/ObsTools/modsView), 
+but will migrate off that platform in the future.
 
 ## System Requirements
 
