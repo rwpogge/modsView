@@ -234,7 +234,7 @@ to ensure the proper citation of software in scientific publications.
 
  > [![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
 
-modsView was developed for the MODS1 and MODS2 instruments at the Large Binocular Telescope Observtory, which were built with
+modsView was developed for the MODS1 and MODS2 instruments at the Large Binocular Telescope Observatory, which were built with
 major support provided by grants from the U.S. National Science Foundation's Division of Astronomical Sciences Advanced 
 Technologies and Instrumentation (AST-9987045), the NSF/NOAO TSIP Program, and matching funds provided by the Ohio State 
 University Office of Research and the Ohio Board of Regents. Additional support for modsView was provided by NSF Grant 
@@ -242,19 +242,13 @@ AST-1108693.
 
 ## Credits & Future Revisions
 
-modsView was based on an earlier, nasty bit of Perl code that made a
-DS9 regions file you could then load by hand (or via xpaset from the
-shell).  It was developed mostly for planning purposes early in the
-MODS project, but not developed further until we started MODS on-sky
-operations.  An intermediate version named luciView was developed at
-OSU for checking LUCI scripts, as syntax and guide-star errors in LUCI
-scripts was a major problem early on in OSU/RC queue operations.
+modsView was based on an earlier, nasty bit of Perl code that made a DS9 regions file you could then load by hand (or via
+xpaset from the shell).  It was developed mostly for planning purposes early in the MODS project, but not developed further
+until we started MODS on-sky operations.  An intermediate version named luciView was developed at OSU for checking LUCI 
+scripts, as syntax and guide-star errors in LUCI scripts was a major problem early on in OSU/RC queue operations.
 
-The need for a similar capability for MODS led to reviving modsView
-and rewriting it in Python, building off our experiences with the
-modsDisp program deployed for a quasi-realtime display of raw MODS
-images at the telescope, and our experiences (good and bad) developing
-the lbtView program for selecting guide stars for MODS and other LBT
-instruments using the ESO skycat package.  The success with modsView
-led us to halt all development of lbtView, which was phased out
+The need for a similar capability for MODS led to reviving modsView and rewriting it in Python, building off our experiences
+with the modsDisp program deployed for a quasi-realtime display of raw MODS images at the telescope, and our experiences
+(good and bad) developing the lbtView program for selecting guide stars for MODS and other LBT instruments using the ESO
+skycat package.  The success with modsView led us to halt all development of lbtView, which was phased out
 completely in 2013.
