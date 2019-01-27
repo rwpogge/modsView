@@ -231,7 +231,7 @@ If you used modsView in your research work, we ask that you follow emerging
 [software citation principles](https://doi.org/10.7717/peerj-cs.86) being adopted by the astronomical community
 to ensure the proper citation of software in scientific publications. 
 
-[![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
+ > [![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
 
 modsView was developed for the MODS1 and MODS2 instruments for the Large Binocular Telescope, which were built with with
 major support provided by grants from the U.S. National Science Foundation's Division of Astronomical Sciences Advanced 
