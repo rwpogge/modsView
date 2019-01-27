@@ -101,23 +101,23 @@ This is the current operational version of modsView to support MODS1+MODS2
 Binocular operations
 
 <dl>
-<dt>Version 2.1p6 (2018 Sep 05) - Python 3 fixes
+<dt>Version 2.1.6 (2018 Sep 05) - Python 3 fixes
 <dd>Fixed bug in Python 3 compatibility (raw_input instead of input). Caught by Johnny Greco, tested
     on iMac running MacOS HighSierra and anaconda python 3.6.5
 
-<dt>Verison 2.1p4 (2018 May 22) - SNS Masks
+<dt>Verison 2.1.4 (2018 May 22) - SNS Masks
 <dd>Support for experimental SNS masks, will not impact normal users
 
-<dt>Version 2.1p3 (2016 Dec 04) - Cosmetic Patch
+<dt>Version 2.1.3 (2016 Dec 04) - Cosmetic Patch
 <dd>This is a patch for version 2.1 that addresses a minor cosmetic
 issue in one print statement that elicited comment from some users.
 
-<dt>Version 2.1p2 (2016 Nov 15) - min/maxmag Patch
+<dt>Version 2.1.2 (2016 Nov 15) - min/maxmag Patch
 <dd>This is a patch for version 2.1 that addresses a problem whereby
 users could not change the minimum (faint) and maximum (bright)
 catalog star magnitudes for display with --minmag/--minmax.
 
-<dt>Version 2.1p1 (2016 Oct 15) - ds9 Patch
+<dt>Version 2.1.1 (2016 Oct 15) - ds9 Patch
 <dd>This is a patch for version 2.1 that addresses a problem
 encountered by users with an older version of pyds9. While we urge
 people to update to the latest version of pyds9, this patch will
@@ -224,6 +224,19 @@ These are notes on Version 1 which was pre-binocular MODS operation.
 <dd>First beta release of modsView.
 
 </dl>
+
+## Acknowledging modsView
+
+If you used modsView in your research work, we ask that you follow emerging
+[software citation principles](https://doi.org/10.7717/peerj-cs.86) being adopted by the astronomical community
+to ensure the proper citation of software in scientific publications. 
+
+[![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
+
+modsView was developed for the MODS1 and MODS2 instruments for the Large Binocular Telescope, which were built with with
+major support provided by grants from the U.S. National Science Foundation's Division of Astronomical Sciences Advanced 
+Technologies and Instrumention (AST-9987045), the NSF/NOAO TSIP Program, and matching funds provided by the Ohio State
+University Office of Research and the Ohio Board of Regents. Additional support was provided by NSF Grant AST-1108693.
 
 ## Credits & Future Revisions
 
