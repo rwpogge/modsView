@@ -78,6 +78,19 @@ unpacking the tarball in your usual place for public add-on programs,
 e.g., /usr/local/, and then installing the executables in, e.g.,
 /usr/local/bin/.
 
+## Acknowledging modsView
+
+If you used modsView in your research work, we ask that you follow emerging
+[software citation principles](https://doi.org/10.7717/peerj-cs.86) being adopted by the astronomical community
+to ensure the proper citation of software in scientific publications. 
+
+ > [![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
+
+modsView was developed for the MODS1 and MODS2 instruments at the Large Binocular Telescope Observatory, which were built with
+major support provided by grants from the U.S. National Science Foundation's Division of Astronomical Sciences Advanced 
+Technologies and Instrumentation (AST-9987045), the NSF/NOAO TSIP Program, and matching funds provided by the Ohio State 
+University Office of Research and the Ohio Board of Regents. Additional support for modsView was provided by NSF Grant 
+AST-1108693.
 
 ## MacOS Notes
 
@@ -226,23 +239,9 @@ These are notes on Version 1 which was pre-binocular MODS operation.
 
 </dl>
 
-## Acknowledging modsView
-
-If you used modsView in your research work, we ask that you follow emerging
-[software citation principles](https://doi.org/10.7717/peerj-cs.86) being adopted by the astronomical community
-to ensure the proper citation of software in scientific publications. 
-
- > [![DOI](https://zenodo.org/badge/142055392.svg)](https://zenodo.org/badge/latestdoi/142055392)
-
-modsView was developed for the MODS1 and MODS2 instruments at the Large Binocular Telescope Observatory, which were built with
-major support provided by grants from the U.S. National Science Foundation's Division of Astronomical Sciences Advanced 
-Technologies and Instrumentation (AST-9987045), the NSF/NOAO TSIP Program, and matching funds provided by the Ohio State 
-University Office of Research and the Ohio Board of Regents. Additional support for modsView was provided by NSF Grant 
-AST-1108693.
-
 ## Credits & Future Revisions
 
-modsView was based on an earlier, nasty bit of Perl code that made a DS9 regions file you could then load by hand (or via
+modsView was based on an earlier, nasty bit of Perl code that made a DS9 regions file you could read into ds9 by hand (or via
 xpaset from the shell).  It was developed mostly for planning purposes early in the MODS project, but not developed further
 until we started MODS on-sky operations.  An intermediate version named luciView was developed at OSU for checking LUCI 
 scripts, as syntax and guide-star errors in LUCI scripts was a major problem early on in OSU/RC queue operations.
