@@ -517,60 +517,6 @@ def findStar(ra, dec, catRAd, catDec, radius):
 
 #---------------------------------------------------------------------------
 #
-# isds9up - see if a named DS9 window is up
-#
-# Inputs:
-#   ds9ID = ID ('title') of a DS9 display window
-#
-# Returns:
-#   True if ds9ID is running, False otherwise.
-#
-# Description:
-#   Uses ds9.DS9 to see if the named ds9 window
-#   is up and running.
-#
-# Author:
-#   P. Kubanek, LBTO
-#   pkubanek@lbto.org
-#   2019 May 24
-#
-
-def isds9up(ds9ID):
-    try:
-        ds9.DS9(ds9ID)
-        return True
-    except:
-        return False
-
-
-#---------------------------------------------------------------------------
-#
-# startDS9 - launch a named ds9 window
-#
-# Inputs:
-#   ds9ID = ID ('title') of a DS9 display window to open
-#
-# Description:
-#   Launches a named DS9 instance, making sure all of the IRAF
-#   imtool pipes are suppresed so that IRAF won't interfere
-#   with it (and vis-vers).  It sleeps for 2 seconds to allow
-#   the tool to open.  This may have to be increased on slower
-#   or more loaded systems.
-#
-# Author:
-#   R. Pogge, OSU Astronomy Dept
-#   pogge.1@osu.edu
-#   2012 May 3
-#
-
-def startDS9(ds9ID):
-    cmdStr = 'ds9 -fifo none -port none -unix none -title %s' % (ds9ID)
-    args = shlex.split(cmdStr)
-    subprocess.Popen(args)
-    sleep(2)
-
-#---------------------------------------------------------------------------
-#
 # loadCat - load in a star catalog into working arrays
 #
 # inputs:
@@ -1407,9 +1353,6 @@ if hasGStar:
 
 if not showField:
     sys.exit(0)
-
-if not isds9up('modsView'):
-    startDS9('modsView')
 
 # Setup the DS9 instance to make it look distinctive
 
