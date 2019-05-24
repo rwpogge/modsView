@@ -96,7 +96,6 @@ import os
 import readline
 import math
 import getopt
-import subprocess
 import shlex
 from time import sleep
 from operator import itemgetter
