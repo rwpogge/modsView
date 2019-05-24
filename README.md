@@ -55,7 +55,6 @@ modsView requires the following packages:
 
  * [pyds9](https://github.com/ericmandel/pyds9)
  * [ds9](http://ds9.si.edu/site/Download.html) - version 7.2 or later
- * [xpa](http://ds9.si.edu/site/XPA.html) - version 2.1.14 or later
 
 ### Python 3 Compatibility
 
@@ -98,8 +97,7 @@ If running on MacOS (e.g, v10.13 HighSierra), we have had good results
 with the X-Quartz version of ds9 but not with the Aqua version.  This
 is due to us having to launch ds9 with a named pipe, and once launched
 pyds9 looks for ds9 in your default path which appears to have some
-effect on xpa interaction.  You also need to make sure all the xpa
-executables are the same path as ds9.
+effect on xpa interaction. 
 
 
 ## Release Notes

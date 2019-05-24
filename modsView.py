@@ -526,22 +526,20 @@ def findStar(ra, dec, catRAd, catDec, radius):
 #   True if ds9ID is running, False otherwise.
 #
 # Description:
-#   Uses the shell's xpaaccess method to see if the named ds9 window
+#   Uses ds9.DS9 to see if the named ds9 window
 #   is up and running.
 #
 # Author:
-#   R. Pogge, OSU Astronomy Dept
-#   pogge.1@osu.edu
-#   2012 May 3
+#   P. Kubanek, LBTO
+#   pkubanek@lbto.org
+#   2019 May 24
 #
 
-
 def isds9up(ds9ID):
-    test = subprocess.Popen(['xpaaccess', '-n', ds9ID],
-                            stdout=subprocess.PIPE).communicate()[0]
-    if int(test):
+    try:
+        ds9.DS9(ds9ID)
         return True
-    else:
+    except:
         return False
 
 
