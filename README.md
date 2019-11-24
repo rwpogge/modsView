@@ -115,6 +115,10 @@ This is the current operational version of modsView to support MODS1+MODS2
 Binocular operations
 
 <dl>
+<dt>Version 2.1.7 (2019 Nov 24) - AGw patrol field update
+<dd>Updated the coordinates of the AGw patrol field to better match the current
+    least-common denominator patrol field for MODS1 and MODS2.
+
 <dt>Version 2.1.6 (2018 Sep 05) - Python 3 fixes
 <dd>Fixed bug in Python 3 compatibility (raw_input instead of input). Caught by Johnny Greco, tested
     on iMac running MacOS HighSierra and anaconda python 3.6.5
