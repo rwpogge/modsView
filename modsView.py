@@ -88,6 +88,7 @@
 #   2018 Jul 22 - Patches for Python 3 & MacOS operation, first release
 #                 using GitHub [rwp/osu]
 #   2018 Sep 05 - fixed input/raw_input problem P2/3 issue [rwp/osu]
+#   2019 Nov 24 - Updated AGw patrol field coordinates [rwp/osu]
 #
 #---------------------------------------------------------------------------
 
@@ -117,8 +118,8 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '2.1.6'
-versDate = '2018-09-05'
+versNum  = '2.1.7'
+versDate = '2019-11-24'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -646,8 +647,8 @@ def drawMODS(objName,target,posAng,gstar,slitMask,offRD,offXY,mmsFile,gprobe,box
 
     # MODS guide patrol field at PA=0 (center and width/height in arcsec)
 
-    (gpfX,gpfY) = (0,-145.0)   
-    (gpfW,gpfH) = (300,300)   
+    (gpfX,gpfY) = (0,-150.0)   
+    (gpfW,gpfH) = (290,300)   
     (xr0,yr0) = rotXY(gpfX,gpfY,-posAng)
     gsBox = (gpfX,gpfY,gpfW,gpfH)
 
@@ -1072,8 +1073,8 @@ for opt, arg in opts:
 
 # MODS guide patrol field at PA=0 (center and width/height in arcsec)
 
-(gpfX,gpfY) = (0,-145)
-(gpfW,gpfH) = (300,300)  
+(gpfX,gpfY) = (0,-150)
+(gpfW,gpfH) = (290,300)  
 
 gsBox = (gpfX,gpfY,gpfW,gpfH)
 
@@ -1521,7 +1522,7 @@ if showCat:
             decStar = catDec[iFound]
             print('\nGuide Star Catalog Info:')
             print('  Star ID: %s %s' % (catID,catName[iFound]))
-            print('   Coords: %s +%s' % (dec2sex(raStar),dec2sex(decStar)))
+            print('   Coords: %s %s' % (dec2sex(raStar),dec2sex(decStar)))
             print('     Phot: R=%.2f B=%.2f' % (catRmag[iFound],catBmag[iFound]))
 
     # If asked to find candidate guide stars, print the list here and
