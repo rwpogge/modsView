@@ -51,10 +51,23 @@ modsView is written in Python and has been tested on the Linux (CentOS
 operating systems.  Python 2.3 or later is required, and the programs
 have been used primarily with Python versions 2.3 through 2.7 to date.
 
+### MacOS Mojave and ds9 v9 Alert!
+
+For MacOS Mojave, ds9 is only available as version 8 and above.  This version of ds9
+made significant and not backwards compatible changes in the image and catalog server
+interaction that breaks modsView.
+
+It also means that modsView will not work with ds9 v8 on any OS (verified on Linux and MacOS 
+HighSierra).
+
+Not happy - making deep changes without providing for backwards compatibility is problematic.
+
+### Required Packages
+
 modsView requires the following packages:
 
  * [pyds9](https://github.com/ericmandel/pyds9)
- * [ds9](http://ds9.si.edu/site/Download.html) - version 7.2 or later
+ * [ds9](http://ds9.si.edu/site/Download.html) - version 7.x, NOT v8!
  * [xpa](http://ds9.si.edu/site/XPA.html) - version 2.1.14 or later
 
 ### Python 3 Compatibility
@@ -70,7 +83,8 @@ You have two options: Personal or Public installation
 For a personal installation, you have two ways to install the files to use:
 
 1. Keep the modsView Python programs in place, and put the modsView directory in your default execution path.
-2. Copy the executable Python programs into your ~/bin/ or  ~/programs/ directory where you put executables in your default execution path.
+2. Copy the executable Python programs into your ~/bin/ or  ~/programs/ directory where you put executables in your default 
+execution path.
 
 For a public installation, e.g., on a central disk to share one copy
 of the package among many users, we suggest logging in as root and
@@ -95,12 +109,16 @@ AST-1108693.
 ## MacOS Notes
 
 If running on MacOS (e.g, v10.13 HighSierra), we have had good results
-with the X-Quartz version of ds9 but not with the Aqua version.  This
-is due to us having to launch ds9 with a named pipe, and once launched
-pyds9 looks for ds9 in your default path which appears to have some
-effect on xpa interaction.  You also need to make sure all the xpa
+with the X-Quartz version of ds9 (aka "darwin") but not with the Aqua 
+version (aka "macos".  This is due to us having to launch ds9 with a named 
+pipe, and once launched pyds9 looks for ds9 in your default path which appears 
+to have some effect on xpa interaction.  You also need to make sure all the xpa
 executables are the same path as ds9.
 
+So far modsView does not work with MacOS Mojave because this OS only supports 
+ds9 version 8 and later, which made some deep changes that are not backwards
+compatible, and you cannot rollback ds9 to v7.6.  We'll address this but the
+changes were major, and it will take time to find solutions.  
 
 ## Release Notes
 
