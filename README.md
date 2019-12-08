@@ -51,7 +51,7 @@ modsView is written in Python and has been tested on the Linux (CentOS
 operating systems.  Python 2.3 or later is required, and the programs
 have been used primarily with Python versions 2.3 through 2.7 to date.
 
-### MacOS Mojave and ds9 v9 Alert!
+### MacOS Mojave and ds9 v8 Alert!
 
 For MacOS Mojave, ds9 is only available as version 8 and above.  This version of ds9
 made significant and not backwards compatible changes in the image and catalog server
