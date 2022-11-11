@@ -46,35 +46,29 @@ but will migrate off that platform in the future.
 
 ## System Requirements
 
-modsView is written in Python and has been tested on the Linux (CentOS
-5.x and 6.x) and Mac OS X (v10.7 Lion and v10.13 High Sierra)
-operating systems.  Python 2.3 or later is required, and the programs
-have been used primarily with Python versions 2.3 through 2.7 to date.
+modsView is written in Python 3 and has been tested on Linux and
+macOS.  Python 3 is required, and the programs have been used
+primarily with Python v3.7 and up.
 
-### MacOS Mojave and ds9 v8 Alert!
-
-For MacOS Mojave, ds9 is only available as version 8 and above.  This version of ds9
-made significant and not backwards compatible changes in the image and catalog server
-interaction that breaks modsView.
-
-It also means that modsView will not work with ds9 v8 on any OS (verified on Linux and MacOS 
-HighSierra).
-
-Not happy - making deep changes without providing for backwards compatibility is problematic.
+The latest version requires the most recent versions of ds9 and xpa,
+since there were significant internal changes in 2021.
 
 ### Required Packages
 
 modsView requires the following packages:
 
  * [pyds9](https://github.com/ericmandel/pyds9)
- * [ds9](http://ds9.si.edu/site/Download.html) - version 7.x, NOT v8!
- * [xpa](http://ds9.si.edu/site/XPA.html) - version 2.1.14 or later
+ * [ds9](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
+ * [xpa](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
 
-### Python 3 Compatibility
+### Python 3 Required
 
-The current version has been verified to run on Python 3 (v3.6.5,
-anaconda distro), using the latest releases of pyds9. Still finding
-bugs, so your mileage may vary (but it's getting better).
+With Python 2 sunsetting on 2022 Jan 1, we now require Python 3 for
+all versions of modsView moving forwrd.  The current version has been
+verified to run on Python 3 (v3.9.13, anaconda distro), using the
+latest releases of pyds9. We no longer support modsView under Python
+2.
+
 
 ## Installation
 
@@ -106,19 +100,14 @@ Technologies and Instrumentation (AST-9987045), the NSF/NOAO TSIP Program, and m
 University Office of Research and the Ohio Board of Regents. Additional support for modsView was provided by NSF Grant 
 AST-1108693.
 
-## MacOS Notes
+## macOS Notes
 
-If running on MacOS (e.g, v10.13 HighSierra), we have had good results
-with the X-Quartz version of ds9 (aka "darwin") but not with the Aqua 
-version (aka "macos".  This is due to us having to launch ds9 with a named 
-pipe, and once launched pyds9 looks for ds9 in your default path which appears 
-to have some effect on xpa interaction.  You also need to make sure all the xpa
-executables are the same path as ds9.
+We've tested this on macOS 10.14 and later, and macOS 11 and 12.  It
+does require having ds9 v8.2 or later and xpa v2.1.20 or later. It
+appears to work better with the X11 versions of ds9 instead of Aqua,
+and confirm that BigSur ARM64 X11 works fine with macOS Monterey (on
+Intel and M1).
 
-So far modsView does not work with MacOS Mojave because this OS only supports 
-ds9 version 8 and later, which made some deep changes that are not backwards
-compatible, and you cannot rollback ds9 to v7.6.  We'll address this but the
-changes were major, and it will take time to find solutions.  
 
 ## Release Notes
 
@@ -133,6 +122,10 @@ This is the current operational version of modsView to support MODS1+MODS2
 Binocular operations
 
 <dl>
+<dt>Version 2.2.1 (2022 Nov 11) - Python 3 version
+<dd>Now only supporting Python 3, and made changes to XPA commands needed to match
+    syntax changes in ds9 and XPA in 2021.
+
 <dt>Version 2.1.7 (2019 Nov 24) - AGw patrol field update
 <dd>Updated the coordinates of the AGw patrol field to better match the current
     least-common denominator patrol field for MODS1 and MODS2.
@@ -263,13 +256,20 @@ These are notes on Version 1 which was pre-binocular MODS operation.
 
 ## Credits & Future Revisions
 
-modsView was based on an earlier, nasty bit of Perl code that made a DS9 regions file you could read into ds9 by hand (or via
-xpaset from the shell).  It was developed mostly for planning purposes early in the MODS project, but not developed further
-until we started MODS on-sky operations.  An intermediate version named luciView was developed at OSU for checking LUCI 
-scripts, as syntax and guide-star errors in LUCI scripts was a major problem early on in OSU/RC queue operations.
+modsView was based on an earlier, nasty bit of Perl code that made a
+DS9 regions file you could read into ds9 by hand (or via xpaset from
+the shell).  It was developed mostly for planning purposes early in
+the MODS project, but not developed further until we started MODS
+on-sky operations.  An intermediate version named luciView was
+developed at OSU for checking LUCI scripts, as syntax and guide-star
+errors in LUCI scripts was a major problem early on in OSU/RC queue
+operations.
 
-The need for a similar capability for MODS led to reviving modsView and rewriting it in Python, building off our experiences
-with the modsDisp program deployed for a quasi-realtime display of raw MODS images at the telescope, and our experiences
-(good and bad) developing the lbtView program for selecting guide stars for MODS and other LBT instruments using the ESO
-skycat package.  The success with modsView led us to halt all development of lbtView, which was phased out
+The need for a similar capability for MODS led to reviving modsView
+and rewriting it in Python, building off our experiences with the
+modsDisp program deployed for a quasi-realtime display of raw MODS
+images at the telescope, and our experiences (good and bad) developing
+the lbtView program for selecting guide stars for MODS and other LBT
+instruments using the ESO skycat package.  The success with modsView
+led us to halt all development of lbtView, which was phased out
 completely in 2013.
