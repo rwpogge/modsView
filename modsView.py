@@ -89,6 +89,7 @@
 #                 using GitHub [rwp/osu]
 #   2018 Sep 05 - fixed input/raw_input problem P2/3 issue [rwp/osu]
 #   2019 Nov 24 - Updated AGw patrol field coordinates [rwp/osu]
+#   2022 Nov 11 - Updated for changes in XPA with ds9 version 8.x [rwp/osu]
 #
 #---------------------------------------------------------------------------
 
@@ -118,8 +119,8 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '2.1.7'
-versDate = '2019-11-24'
+versNum  = '2.2.1'
+versDate = '2022-11-11'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -1039,10 +1040,11 @@ for opt, arg in opts:
         findGStars = True
     elif opt in ('--server'):
         dssServer = arg
-        if dssServer.lower() == 'stsci':
-            skySurvey = 'all'   # best of all available surveys for the field
-        elif dssServer.lower() == 'eso':
+        if dssServer.lower() == 'stsci' or dssServer.lower() == 'dss':
             skySurvey = 'DSS2-red' # DSS second epoch
+            # skySurvey = 'all'   # best of all available surveys for the field
+        elif dssServer.lower() == 'eso':
+            skySurvey = 'DSS2RED' # DSS second epoch
         else:
             print('\n**ERROR: Unrecognized image server option %s, must be stsci or eso\n' % (dssServer))
             sys.exit(1)
@@ -1419,17 +1421,17 @@ disp.set('view colorbar no')     # don't need color bar
 
 print('\nDisplaying MODS sky view:')
 if useDSS:
-    print('  Downloading DSS image from the server...')
     imgServer = 'dss'+dssServer
+    print('  Downloading DSS image from the server...')
     ds9cmd = '%s size %.2f %.2f arcmin' % (imgServer,boxSize,boxSize)
     disp.set(ds9cmd)
     ds9cmd = '%s survey %s' % (imgServer,skySurvey)
     disp.set(ds9cmd)
-    ds9cmd = '%s coord %fd %fd decimal' % (imgServer,targRAd,targDec)
+    ds9cmd = f'{imgServer} coord {tRAStr} {tDecStr}'
     try:
         disp.set(ds9cmd)
     except:
-        print('  *** ERROR: Could not connect to the image server, aborting.')
+        print('  *** ERROR: Could not connect to the image server, aborting')
         sys.exit(1)
 
     ds9cmd = '%s close' % (imgServer)
@@ -1496,7 +1498,8 @@ if showCat:
     disp.set(ds9cmd)
     tmpFile = fileRoot+'_'+starCat+'.cat'
     catFile = os.path.join(myDir,tmpFile)
-    ds9cmd = 'catalog save tsv %s' % (catFile)
+    #ds9cmd = 'catalog save tsv %s' % (catFile)
+    ds9cmd = 'catalog export tsv %s' % (catFile)
     disp.set(ds9cmd)
     #disp.set('catalog close')
     catUp = True
@@ -1868,4 +1871,3 @@ if showCat:
 
 print('\n')
 sys.exit(0)
-
