@@ -116,6 +116,12 @@ releases. Older copies of modsView are available below, but we
 strongly recommend that you only download the latest version. This is
 the version that is installed at LBT.
 
+### Version 3
+
+Experimental and unstable alpha version, **not for general use yet**, that
+replaces the no longer supported `pyds9` with SAMP interaction with
+ds9 using `astropy.samp`.  
+
 ### Version 2
 
 This is the current operational version of modsView to support MODS1+MODS2
