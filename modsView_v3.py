@@ -97,8 +97,8 @@ Modification History
    2019 Nov 24 - Updated AGw patrol field coordinates [rwp/osu]
    2022 Nov 11 - Updated for changes in XPA with ds9 version 8.x [rwp/osu]
 
-   2025 Feb 05 - start of v3 SAMP development [rwp/osu]
-
+   2025 Feb 05 - Switched to astropy.samp to use SAMP for ds9 interface [rwp/osu]
+   
 '''
 
 import sys
@@ -122,8 +122,8 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '3.0.0'
-versDate = '2025-02-05'
+versNum  = '3.0.1'
+versDate = '2025-02-06'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -501,8 +501,9 @@ def sex2dec(sexStr,precision=8):
     -----
     If the string is in 12h13m18.23s format, the "h" will make sure the
     conversion preserves units of hours.  Correctly recognizes strings
-    that don't use the colon (:) separator, so 12:13:14.15 = 12d13m14.15s and 12:13:14.15 = 12h13m14.5s preserve
-    correct hours or degrees units on the conversion to decimal
+    that don't use the colon (:) separator, so 12:13:14.15 = 12d13m14.15s 
+    and 12:13:14.15 = 12h13m14.5s preserve correct hours or degrees units 
+    on the conversion to decimal format.
                 
     See Also
     --------
@@ -553,7 +554,7 @@ def inTriangle(x1,y1,x2,y2,x3,y3,x,y):
     A very lucid description of the problem is in the Wikipedia
     article on the barycentric coordinate system:
       
-    en.wikipedia.org/wiki/Barycentric_coordinate_system_(mathematics)
+    https://en.wikipedia.org/wiki/Barycentric_coordinate_system_(mathematics)
     
     '''
 
@@ -819,8 +820,9 @@ def loadCat(catFile):
 
     Description
     -----------
-    Knows how to read star catalog downloaded from a catalog
-    server by the ds9 instance.
+    Open and parse a star catalog downloaded from a catalog
+    server by the ds9 instance with the ds9 set command
+        `catalog export tsv catFile`
     
     '''
     SC=open(catFile,'r')
@@ -892,12 +894,17 @@ def drawMODS(objName,target,posAng,gstar,slitMask,offRD,offXY,mmsFile,gprobe,box
     -------
     None.
 
+    Description
+    -----------
+    Draws the full MODS footprint on the image displayed in the ds9
+    window using the ds9 regions file utility.  If changes need to
+    be made to the footprint, they are made here.
+    
     '''
 
     # MODS science field at PA=0 (center and width/height in arcsec).
 
     (sciX,sciY) = (0,0)
-    (sciW,sciH) = (360,360)
 
     # MODS guide patrol field at PA=0 (center and width/height in arcsec)
 
@@ -1083,7 +1090,7 @@ def drawMODS(objName,target,posAng,gstar,slitMask,offRD,offXY,mmsFile,gprobe,box
         yName = 4.75*boxSize/10.0
         (cRA,cDec) = stdToRD(60.0*xName,60.0*yName,targRA,targDec)
         cRAd=15.0*cRA
-        RF.write(f'text {cRAd}d {cDec}d # text={{objName}} color=yellow font=\'helvetica 14 normal roman\'\n')
+        RF.write(f'text {cRAd}d {cDec}d # text={{{objName}}} color=yellow font=\'helvetica 14 normal roman\'\n')
         
     # If requested, show the nominal guide probe shadow.  Note that
     # the probe stays fixed on the guide star, so we don't follow any
@@ -1172,6 +1179,7 @@ def printUsage():
 useDSS = True         # Use the Digitized Sky Survey as the image source
 showField = True      # Display the target field in DS9 by default
 makeFinder = False    # Do not make a finder unless asked to
+saveScript = False    # Save a copy of the script after guide star selection?
 alignWCS = True       # Align the image N=up/E=left by default
 alignMODS = False     # Align MODS view with the sky (False to align sky to MODS)
 showCat = True        # Overlay catalog stars by default
@@ -1297,7 +1305,7 @@ for opt, arg in opts:
 # MODS science field at PA=0 (center and width/height in arcsec)
 
 (sciX,sciY) = (0,0)
-(sciW,sciH) = (360,360)
+#(sciW,sciH) = (360,360)
 
 # MODS guide patrol field at PA=0 (center and width/height in arcsec)
 
@@ -1342,20 +1350,20 @@ elif numFiles>2:
     sys.exit(1)
 
 if numFiles==2:
-    inFile = files[0]
+    acqFile = files[0]
     fitsFile = files[1]
     useDSS = False
 else:
-    inFile = files[0]
+    acqFile = files[0]
     useDSS = True
 
 # Get the name of the MODS script to view
 
-if not os.path.isfile(inFile):
-    print(f"\n**ERROR: Could not find MODS script file {inFile}\n")
+if not os.path.isfile(acqFile):
+    print(f"\n**ERROR: Could not find MODS script file {acqFile}\n")
     sys.exit(1)
 
-(fileRoot,fileExt) = os.path.splitext(inFile)
+(acqRoot,acqExt) = os.path.splitext(acqFile)
 
 # If using an MMS file, make sure it exists
 
@@ -1372,16 +1380,16 @@ if maxMag > minMag:
 
 # This program works with .acq and .img files, not .obs files
 
-if fileExt == '.obs':
-    print(f"\n**ERROR: {inFile} is a MODS observing script.")
+if acqExt == '.obs':
+    print(f"\n**ERROR: {acqFile} is a MODS observing script.")
     print('         modsView only works with MODS .acq or .img scripts\n')
     sys.exit(1)
 
 # Open the file, scan it in, and extract the coordinates of the
 # target and guide star, and the instrument position angle
 
-MF=open(inFile,'r')
-fileLines = MF.readlines()[::]
+MF=open(acqFile,'r')
+acqLines = MF.readlines()[::]
 MF.close()
 
 hasTarget = False
@@ -1401,11 +1409,12 @@ acqCamera = None
 acqFilter = None
 acqExpTime = 0.0
 
-for i in range(len(fileLines)):
-    testStr = fileLines[i].strip()
+for acqLine in acqLines:
+    testStr = acqLine.strip()
     strBits = testStr.split()
     if not testStr.startswith('#') and len(strBits)>0:
-        if strBits[0].upper() == 'OBJCOORDS':
+        acqCmd = strBits[0].upper()
+        if acqCmd == 'OBJCOORDS':
             if len(strBits)<3:
                 print(f"\n**ERROR: OBJCOORDS has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
@@ -1415,7 +1424,7 @@ for i in range(len(fileLines)):
             targRAd = 15.0*targRA
             tDecStr = strBits[2]
             targDec = sex2dec(strBits[2])
-        elif strBits[0].upper() == 'GUICOORDS':
+        elif acqCmd == 'GUICOORDS':
             if len(strBits)<3:
                 print(f"\n**ERROR: GUICOORDS has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
@@ -1425,20 +1434,20 @@ for i in range(len(fileLines)):
             gsRAd = 15.0*gsRA
             gDecStr = strBits[2]
             gsDec = sex2dec(strBits[2])
-        elif strBits[0].upper() == 'POSANGLE':
+        elif acqCmd == 'POSANGLE':
             if len(strBits)<2:
                 print(f"\n**ERROR: POSANGLE has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasPosAng = True
             posAng = float(strBits[1])
-        elif strBits[0].upper() == 'ROTATOR':
+        elif acqCmd == 'ROTATOR':
             if len(strBits)<3:
                 print(f"\n**ERROR: ROTATOR has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasPosAng = True
             posAng = float(strBits[1])
             print('\n**NOTE: ROTATOR is deprecated, please use POSANGLE xy.z')
-        elif strBits[0].upper() == 'OFFSET':
+        elif acqCmd == 'OFFSET':
             if len(strBits)<4:
                 print(f"\n**ERROR: OFFSET has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
@@ -1446,7 +1455,7 @@ for i in range(len(fileLines)):
             offsetRA = float(strBits[1])
             offsetDec = float(strBits[2])
             offsetType = strBits[3].lower()
-        elif strBits[0].upper() == 'OFFSETXY':
+        elif acqCmd == 'OFFSETXY':
             if len(strBits)<4:
                 print(f"\n**ERROR: OFFSETXY has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
@@ -1454,25 +1463,25 @@ for i in range(len(fileLines)):
             offsetX = float(strBits[1])
             offsetY = float(strBits[2])
             offsetType = strBits[3].lower()
-        elif strBits[0].upper() == 'OBJNAME':
+        elif acqCmd == 'OBJNAME':
             objName = testStr.split(None,1)[1]
-        elif strBits[0].upper() == 'SLITMASK':
+        elif acqCmd == 'SLITMASK':
             if len(strBits)<2:
                 print(f"\n**ERROR: SLITMASK has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             slitMask = strBits[1]
             hasSlitMask = True
-        elif strBits[0].upper() == 'AGWFILT':
+        elif acqCmd == 'AGWFILT':
             agwFilt = testStr.split(None,1)[1]
             if agwFilt.upper() == 'B_BESSEL':
                 catFilt = 'B'
             else:
                 catFilt = 'R' # effective bandpass of Clear et al.
-        elif strBits[0].upper() == 'ACQCAMERA':
+        elif acqCmd == 'ACQCAMERA':
             acqCamera = strBits[1]
-        elif strBits[0].upper() == 'ACQFILTER':
+        elif acqCmd == 'ACQFILTER':
             acqFilter = strBits[1]
-        elif strBits[0].upper() == 'ACQEXPTIME':
+        elif acqCmd == 'ACQEXPTIME':
             acqExpTime = float(strBits[1])
 
 # See if we are missing anything in the script.  Behavior depends on
@@ -1522,7 +1531,7 @@ else:
 
 # Print a summary:
 
-print(f"\nMODS {fileExt} Script: {inFile}")
+print(f"\nMODS {acqExt} Script: {acqFile}")
 print('\nSummary:')
 print(f"      Object: {objName}")
 print(f"      Coords: {tRAStr} {tDecStr}")
@@ -1698,7 +1707,7 @@ if showCat:
     disp.set(f"catalog filter ${starMag}<{minMag:.2f}&&${starMag}>{maxMag:.2f}")
     disp.set(f"catalog symbol text ${starMag}")
 
-    catFile = str(Path.cwd() / f"{fileRoot}_{starCat}.cat")   
+    catFile = str(Path.cwd() / f"{acqRoot}_{starCat}.cat")   
     disp.set(f"catalog export tsv {catFile}")
     catUp = True
 
@@ -1787,15 +1796,18 @@ if showCat:
                     print('\nGuide Star Selection aborted...')
                     hasGStar = False
                     hasPicked = True
+                    saveScript = False
                 elif iPick in starList:
                     print('\nGuide Star Selection:')
-                    print(f'\n  GUINAME {catID} {catName[iPick]}')
+                    newGUINAME = f"GUINAME {catID} {catName[iPick]}"
+                    print(f"  {newGUINAME}")
                     raStar = catRAd[iPick]/15.0
                     decStar = catDec[iPick]
                     if decStar>0:
-                        print(f'  GUICOORDS {dec2sex(raStr)} +{dec2sex(decStr)} # R={catRmag[iPick]:.2f} B={catBmag[iPick]:.2f}')
+                        newGUICOORDS = f"GUICOORDS {dec2sex(raStar)} +{dec2sex(decStar)} # R={catRmag[iPick]:.2f} B={catBmag[iPick]:.2f}"
                     else:
-                        print(f'  GUICOORDS {dec2sex(raStr)} {dec2sex(decStr)} # R={catRmag[iPick]:.2f} B={catBmag[iPick]:.2f}')
+                        newGUICOORDS = f"GUICOORDS {dec2sex(raStar)} {dec2sex(decStar)} # R={catRmag[iPick]:.2f} B={catBmag[iPick]:.2f}"
+                    print(f"  {newGUICOORDS}")
                     gsRA = raStar
                     gsDec = decStar
                     hasGStar = True
@@ -1813,16 +1825,34 @@ if showCat:
             drawMODS(objName,(targRA,targDec),posAng,(gsRA,gsDec),slitMask,(offsetRA,offsetDec), \
                          (offsetX,offsetY),mmsFile,showShadow,boxSize)
             disp.set(f"regions file {regFile}")
-
-# Make an PNG finder chart if requested
+            yorn = input("\nMake a copy of the script with the new guide star [Y|N]? ")
+            saveScript = yorn.lower().startswith("y")
+            
+# Make an PNG finder chart?
 
 if makeFinder:
-    fcFile = str(Path.cwd() / f"{fileRoot}.png")
+    fcFile = str(Path.cwd() / f"{acqRoot}.png")
     disp.set(f"saveimage png {fcFile}")
-    print(f"\nCreated finder chart {fileRoot}.png")
+    print(f"\nCreated finder chart {acqRoot}.png")
 
-# Cleanup: remove delinquent catalog files, close open catalog tools,
-#          etc.
+# Make a copy of the script with the new guide star selection?
+
+if saveScript:
+    newFile = f"{acqRoot}_new{acqExt}"
+    if os.path.exists(newFile):
+        os.remove(newFile)
+    nf = open(newFile,'w')
+    for acqLine in acqLines:
+        if "guiname" in acqLine.lower():
+            nf.write(f"  {newGUINAME}\n")
+        elif "guicoord" in acqLine.lower():
+            nf.write(f"  {newGUICOORDS}\n")
+        else:
+            nf.write(f"{acqLine}")
+    nf.close()
+    print(f"Wrote modified {acqExt} script {newFile}")
+    
+# Cleanup: remove delinquent catalog files, close open catalog tools, etc.
 
 if os.path.isfile(catFile):
     if keepCat:
@@ -1838,6 +1868,5 @@ if showCat:
 
 # All Done!
 
-print('\n')
 sys.exit(0)
 
