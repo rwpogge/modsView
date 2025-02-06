@@ -63,7 +63,8 @@ modsView v2 requires the following packages:
 
 modsView v3 will require the following packages:
  * `astropy.samp` (replaces `pyds9` and `xpa` for `ds9` interaction)
- * `astropy.coordinates` (SkyCoord and Angle)
+ * `astropy.coordinates` for celestial coordinates and conversions
+ * `astropy.units` for celestial coordinates
 
 ### Python 3 Required
 
@@ -125,6 +126,8 @@ the version that is installed at LBT.
 Experimental and unstable alpha version, **not for general use yet**, that
 replaces the no longer supported `pyds9` with SAMP interaction with
 ds9 using `astropy.samp`.  
+
+Testing is in progress as of 2025 Feb 5
 
 ### Version 2
 
