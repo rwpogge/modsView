@@ -2,99 +2,104 @@
 #
 # Typical System: /usr/bin/env python
 # LBT MODS runtime: /lbt/mods_runtime/anaconda/bin/python
-#
-# modsView - View a MODS target acquisition (.acq) or imaging (.img) script
-# 
-# Reads the contents of a MODS target acquisition (.acq) or the target
-# acquisition blocks of a MODS imaging (.img) script, and displays the
-# results on a ds9 window, overlaying the MODS focal plane on a
-# digitized sky survey image of the target field.  It also finds and
-# overlays catalog stars and their R magnitudes.
-#
-# It tests to see if the guide star is inside the guide patrol field
-# given the instrument rotator angle.  If there are any telescope
-# offsets as part of the target acquisition, it will test the location
-# of the guide star after the offset to verify that it is still inside
-# the MODS guide patrol field.
-#
-# Uses the Python ds9 module to interact with a named DS9 window.  The
-# window is launched as needed, turning off all of the IRAF imtool
-# pipes so a person running IRAF will not step on this display (and
-# vis-versa).
-#
-# Creates a temporary modsView.reg file containing the DS9 region file
-# used to draw the MODS focal plane on the screen.
-#
-# It can also be used to create a PNG-format finder chart by using the
-# --finder option.
-#
-# Dependencies:
-#   Requires your system have SAOImage DS9 installed and running
-#   https://sites.google.com/cfa.harvard.edu/saoimageds9
-#
-#   Starting with version 3 we are using the SAMP messaging protocol
-#   to interact with ds9 as pyds9 is no longer supported.  We are adopting
-#   the astropy.samp implementatino.
-#
-# Distribution:
-#   The primary distribution is now on GitHub
-#     github.com/rwpogge/modsView
-#
-# Author:
-#   R. Pogge, OSU Astronomy Department
-#   pogge.1@osu.edu
-#   2012 May 4
-#
-# Modification History:
-#   2012 May 04 - first beta release, does only guide-star checking
-#                 and *very* minimal syntax checks. [rwp/osu]
-#   2012 May 06 - first experiments with interactive mode, added a
-#                 number of functions [rwp/osu]
-#   2012 May 20 - Added probe shadow option (--shadow) and plot OBJNAME 
-#                 label or suppress with --nolabel [rwp/osu]
-#   2012 Oct 01 - Experimental interactive version, call it 1.0.0...
-#   2012 Nov 08 - Added ability to use B magnitudes in catalogs instead
-#                 of just R, and introduced the --find option to give an
-#                 R_mag-sorted list of candidate guide stars to pick from
-#                 interactively (type number at prompt) [rwp/osu]
-#   2012 Nov 28 - added NOMAD1 catalog support as default [rwp/osu]
-#   2012 Dec 03 - restored --rotate function [rwp/osu]
-#   2012 Dec 18 - fixed bug in display of the instrument rotator sweep
-#                 and long-slit positions after offsets [rwp/osu]
-#   2012 Dec 19 - minor patch, exception catching for python 2.7
-#                 (raises exception of you try to close a catalog pane that
-#                 is already closed - python 2.6 doesn't care) [rwp/osu]
-#   2013 Jan 7  - minor bug if nonsensical min/max magnitude ranges set
-#                 [rwp/osu]
-#   2013 Mar 19 - bugs in the offseting logic [rwp/osu]
-#   2013 Apr 11 - Allow for no + sign on Decs in MMS files (not strictly
-#                 permitted, but apparent can happen), and fixed a
-#                 previously undetected bug in guide probe shaddow
-#                 rendering under RA/Dec offsets [rwp/osu]
-#   2014 Feb 23 - adjusted guide patrol field size for changes in 
-#                 maximum Y stage travel limits with the WFS hotspot
-#                 offset.  Found conflicting limits in different parts of
-#                 the program resulting in the patrol field being drawn
-#                 too large, and tests failing to alert a star just outside
-#                 the effective guide patrol field. [rwp/osu]
-#   ================================================================
-#   2014 Apr 28 - Start of binocular MODS hooks, including support for the
-#                 different MODS1 and MODS2 AGw parameters [rwp/osu]
-#   2015 Nov 20 - First v2.0 release for MODS1 or MODS2 use [rwp/osu]
-#   2016 Oct 11 - MODS1 and 2 have the same AGw WFS configuration as of
-#                 October 2016, so old MODS1 offset hotspot has been removed,
-#                 and --mods1/mods2 is no longer required [rwp/osu]
-#   2016 Oct 15 - Minor mods for pyds9 vs ds9 back compatibility [rwp/osu]
-#   2018 May 22 - Support for experimental SNS masks [rwp/osu]
-#   2018 Jul 22 - Patches for Python 3 & MacOS operation, first release
-#                 using GitHub [rwp/osu]
-#   2018 Sep 05 - fixed input/raw_input problem P2/3 issue [rwp/osu]
-#   2019 Nov 24 - Updated AGw patrol field coordinates [rwp/osu]
-#   2022 Nov 11 - Updated for changes in XPA with ds9 version 8.x [rwp/osu]
-#   ================================================================
-#   2025 Feb 05 - start of v3 SAMP development [rwp/osu]
-#
-#---------------------------------------------------------------------------
+'''
+modsView - View a MODS target acquisition (.acq) or imaging (.img) script
+
+Description
+----------- 
+Reads the contents of a MODS target acquisition (.acq) or the target
+acquisition blocks of a MODS imaging (.img) script, and displays the
+results on a ds9 window, overlaying the MODS focal plane on a
+digitized sky survey image of the target field.  It also finds and
+overlays catalog stars and their R magnitudes.
+
+It tests to see if the guide star is inside the guide patrol field
+given the instrument rotator angle.  If there are any telescope
+offsets as part of the target acquisition, it will test the location
+of the guide star after the offset to verify that it is still inside
+the MODS guide patrol field.
+
+Uses the Python ds9 module to interact with a named DS9 window.  The
+window is launched as needed, turning off all of the IRAF imtool
+pipes so a person running IRAF will not step on this display (and
+vis-versa).
+
+Creates a temporary modsView.reg file containing the DS9 region file
+used to draw the MODS focal plane on the screen.
+
+It can also be used to create a PNG-format finder chart by using the
+--finder option.
+
+Dependencies
+------------
+   Requires your system have SAOImage DS9 installed and running
+   https://sites.google.com/cfa.harvard.edu/saoimageds9
+
+   Starting with version 3 we are using the SAMP messaging protocol
+   to interact with ds9 as pyds9 is no longer supported.  We are adopting
+   the astropy.samp implementatino.
+
+Distribution
+------------
+   The primary distribution is now on GitHub
+     github.com/rwpogge/modsView
+
+Author
+------
+   R. Pogge, OSU Astronomy Department
+   pogge.1@osu.edu
+   First version: 2012 May 4
+
+Modification History
+--------------------
+   2012 May 04 - first beta release, does only guide-star checking
+                 and *very* minimal syntax checks. [rwp/osu]
+   2012 May 06 - first experiments with interactive mode, added a
+                 number of functions [rwp/osu]
+   2012 May 20 - Added probe shadow option (--shadow) and plot OBJNAME 
+                 label or suppress with --nolabel [rwp/osu]
+   2012 Oct 01 - Experimental interactive version, call it 1.0.0...
+   2012 Nov 08 - Added ability to use B magnitudes in catalogs instead
+                 of just R, and introduced the --find option to give an
+                 R_mag-sorted list of candidate guide stars to pick from
+                 interactively (type number at prompt) [rwp/osu]
+   2012 Nov 28 - added NOMAD1 catalog support as default [rwp/osu]
+   2012 Dec 03 - restored --rotate function [rwp/osu]
+   2012 Dec 18 - fixed bug in display of the instrument rotator sweep
+                 and long-slit positions after offsets [rwp/osu]
+   2012 Dec 19 - minor patch, exception catching for python 2.7
+                 (raises exception of you try to close a catalog pane that
+                 is already closed - python 2.6 doesn't care) [rwp/osu]
+   2013 Jan 7  - minor bug if nonsensical min/max magnitude ranges set
+                 [rwp/osu]
+   2013 Mar 19 - bugs in the offseting logic [rwp/osu]
+   2013 Apr 11 - Allow for no + sign on Decs in MMS files (not strictly
+                 permitted, but apparent can happen), and fixed a
+                 previously undetected bug in guide probe shaddow
+                 rendering under RA/Dec offsets [rwp/osu]
+   2014 Feb 23 - adjusted guide patrol field size for changes in 
+                 maximum Y stage travel limits with the WFS hotspot
+                 offset.  Found conflicting limits in different parts of
+                 the program resulting in the patrol field being drawn
+                 too large, and tests failing to alert a star just outside
+                 the effective guide patrol field. [rwp/osu]                 
+   2014 Apr 28 - Start of binocular MODS hooks, including support for the
+                 different MODS1 and MODS2 AGw parameters [rwp/osu]
+   2015 Nov 20 - First v2.0 release for MODS1 or MODS2 use [rwp/osu]
+   2016 Oct 11 - MODS1 and 2 have the same AGw WFS configuration as of
+                 October 2016, so old MODS1 offset hotspot has been removed,
+                 and --mods1/mods2 is no longer required [rwp/osu]
+   2016 Oct 15 - Minor mods for pyds9 vs ds9 back compatibility [rwp/osu]
+   2018 May 22 - Support for experimental SNS masks [rwp/osu]
+   2018 Jul 22 - Patches for Python 3 & MacOS operation, first release
+                 using GitHub [rwp/osu]
+   2018 Sep 05 - fixed input/raw_input problem P2/3 issue [rwp/osu]
+   2019 Nov 24 - Updated AGw patrol field coordinates [rwp/osu]
+   2022 Nov 11 - Updated for changes in XPA with ds9 version 8.x [rwp/osu]
+
+   2025 Feb 05 - start of v3 SAMP development [rwp/osu]
+
+'''
 
 import sys
 import os
@@ -510,32 +515,6 @@ def sex2dec(sexStr,precision=8):
         units = u.deg
     return float(Angle(sexStr,unit=units).to_string(decimal=True,precision=precision))
 
-#---------------------------------------------------------------------------
-#
-# inTriangle() - Test to see if (x,y) is inside a triangle
-#
-# Inputs:
-#   x1,y1,x2,y2,x3,y3 = Cartesian coordinates of the triangle vertices
-#   x,y = Cartesian coordinates of the test point.
-#
-# Returns:
-#   True if (x,y) is inside the triangle, False if outside.
-#
-# Description:
-#   Solves this classic geometry problem by transforming the
-#   coordinates of the triangle vertices and the test point into the
-#   barycentric coordinate system of the triangle.
-#
-#   A very lucid description of the problem is in the Wikipedia
-#   article on the barycentric coordinate system:
-#
-#     en.wikipedia.org/wiki/Barycentric_coordinate_system_(mathematics)
-#
-# Author:
-#   R. Pogge, OSU Astronomy Dept
-#   pogge.1@osu.edu
-#   2012 May 2
-#
 
 def inTriangle(x1,y1,x2,y2,x3,y3,x,y):
     '''
@@ -653,30 +632,6 @@ def inBox(x,y,rect,rotAng):
         return False
 
     
-#---------------------------------------------------------------------------
-#
-# rotXY - rotate XY coordinates
-#
-# Inputs:
-#     x,y = float positions relative to origin
-#  rotAng = rotation angle in degrees
-#
-# Returns:
-#    xr,yr = (x,y) in the rotated frame
-#
-# Description:
-#   Convenience function to evaluate the standard Cartesian 2D
-#   coordinate system rotation.  Note that for applying this to
-#   astronomical standard coordinates (xi,eta), the helicity of rotAng
-#   has the opposite sign (e.g., compute xi,eta when rotating by
-#   celestial position angle posAng, use rotAng=-posAng).
-#
-# Author:
-#   R. Pogge, OSU Astronomy Dept
-#   pogge.1@osu.edu
-#   2012 May 2
-#
-
 def rotXY(x,y,rotAng):
     '''
     rotate (x,y) relative to the origin (0,0)
@@ -775,14 +730,14 @@ def parseMMS(file):
                     if targNum >= firstTarget:
                         if field == 'ALPHA':
                             raStr = datum
-                            sexStr = '%s:%s:%s' % (raStr[0:2],raStr[2:4],raStr[4:]) 
+                            sexStr = f"{raStr[0:2]}:{raStr[2:4]}:{raStr[4:]}"
                             ra.append(sex2dec(sexStr))
                         elif field == 'DELTA':
                             decStr = datum
                             if decStr[0] == '-' or decStr[0]=='+':
-                                sexStr = '%s:%s:%s' % (decStr[0:3],decStr[3:5],decStr[5:])
+                                sexStr = f"{decStr[0:3]}:{decStr[3:5]}:{decStr[5:]}"
                             else:
-                                sexStr = '%s:%s:%s' % (decStr[0:2],decStr[2:4],decStr[4:])
+                                sexStr = f"{decStr[0:2]}:{decStr[2:4]}:{decStr[4:]}"
                             dec.append(sex2dec(sexStr))
                         elif field == 'WID':
                             swid.append(float(datum))
@@ -905,22 +860,6 @@ def loadCat(catFile):
 
     return numStars,catID,catRAd,catDec,catBmag,catRmag,catName
 
-#---------------------------------------------------------------------------
-#
-# drawMODS - Create the MODS instrument overlay as a DS9 region file
-#
-# Inputs:
-#   objName  - [string] Object Name
-#   target   - [tuple] target (RA,Dec) in decimal hours and degrees
-#   posAng   - [float] mask celestial position angle in decimal degrees
-#   gstar    - [tuple] guide star (RA,Dec) in decimal h/deg or None
-#   slitMask - [string] slit mask ID
-#   offRD    - [tuple] RADEC offset (dRA,dDec) in decimal arcseconds
-#   offXY    - [tuple] DETXY offset (dX,dY) in decimal arcseconds
-#   mmsFile  - [string] name of a MODS Mask Specification (mms) file
-#   gprobe   - [bool] show the guide probe shadow
-#   boxSize  - [int] size of the image display box in arcminutes 
-#   
 
 def drawMODS(objName,target,posAng,gstar,slitMask,offRD,offXY,mmsFile,gprobe,boxSize):
     '''
@@ -1207,13 +1146,13 @@ def printUsage():
     print(' --rotate    rotate to fixed-MODS orientation (default: N=up/E=left)')
     print(' --noalign   do not align the DSS image to N=up/E=left, default: align')
     print(' --size s    change the size of the image to s arcmin (default: 12 arcmin)')
-    print(' --cat catID use catalog catID, options: nomad, ub1 or ua2 (default: %s)' % (defCatalog))
+    print(f' --cat catID use catalog catID, options: nomad, ub1 or ua2 (default: {defCatalog})')
     print(' --nocat     do not overlay catalog stars')
     print(' --keepcat   do not delete star catalog working files (default: delete catalogs)')
     print(' --find      Print a list of candidate guide stars to select from')
-    print(' --minmag x  specify the catalog faint magnitude limit. default: %.1f' % (minRMag))
-    print(' --maxmag x  specify the catalog bright magnitude limit, default: %.1f' % (maxRMag))
-    print(' --server x  image server to use, must be one of stsci or eso, default: %s' % (defServer))
+    print(f' --minmag x  specify the catalog faint magnitude limit. default: {minRMag:.1f}')
+    print(f' --maxmag x  specify the catalog bright magnitude limit, default: {maxRMag:.1f}')
+    print(f' --server x  image server to use, must be one of stsci or eso, default: {defServer}')
     print(' --survey x  sky survey to use, must be valid for server')
     print('               defaults: stsci=all, eso=DSS2-Red')
     print(' --nolabel   do not label the image with OBJNAME')
@@ -1239,14 +1178,14 @@ showCat = True        # Overlay catalog stars by default
 keepCat = False       # Delete the catalog file when done (True to keep)
 dssServer = defServer # Default image server
 skySurvey = defSurvey # Default sky survey to use (must be valid)
-catFile = 'modsView.cat' # Placeholder star catalog file
+catFile = "modsView.cat" # Placeholder star catalog file
 starCat = defCatalog  # Default optical star catalog
 catFilt = defAGwFilt  # Default AGw Guide Camera Filter (options: 'R' or 'B')
 boxSize = 12          # Size of the sky box in arcminutes (square)
 showSlit = False      # Don't show a slit unless there is one to show
 showGrid = False      # Do not overlay a coordinate grid
 killDS9  = False      # If True, kill the DS9 window if up and exit
-fitsFile = 'none'
+fitsFile = "none"
 interact = False      # Non-interactive by default
 catRadius = 10.0      # catalog star to cursor search radius in arcsec
 showShadow = False    # Do not draw the nominal pickoff shadow
@@ -1274,7 +1213,7 @@ try:
                                      'nolabel','mask=','mms=','keepcat','agwfilt=','find',
                                      'mods1','mods2','mods='])
 except getopt.GetoptError as err:
-    print('\n** ERROR: %s' % (err))
+    print(f"\n** ERROR: {err}")
     printUsage()
     sys.exit(2)
 
@@ -1305,7 +1244,7 @@ for opt, arg in opts:
         elif catFilt.lower() == 'b':
             catFilt = 'B'
         else:
-            print('\n**ERROR: Invalid AGw Filter option %s, must be R or B' % (catFilt))
+            print(f"\n**ERROR: Invalid AGw Filter option {catFilt}, must be R or B")
             sys.exit(1)
     elif opt in ('--nocat'):
         showCat = False
@@ -1333,18 +1272,18 @@ for opt, arg in opts:
         elif dssServer.lower() == 'eso':
             skySurvey = 'DSS2RED' # DSS second epoch
         else:
-            print('\n**ERROR: Unrecognized image server option %s, must be stsci or eso\n' % (dssServer))
+            print(f"\n**ERROR: Unrecognized image server option {dssServer}, must be stsci or eso\n")
             sys.exit(1)
     elif opt in ('--survey'):
         skySurvey = arg
     elif opt in ('-V','--version'):
-        print('modsView.py v%s [%s]' % (versNum,versDate))
+        print(f"modsView.py v{versNum} [{versDate}]")
         sys.exit(0)
     elif opt in ('-c','--catalog','--cat'):
         showCat = True
         starCat = arg
         if not starCat.lower() in ('ua2','ub1','nomad'):
-            print('\n** ERROR: unrecognized star catalog %s, must be nomad, ub1, or ua2\n' % (starCat))
+            print(f"\n** ERROR: unrecognized star catalog {starCat}, must be nomad, ub1, or ua2\n")
             sys.exit(1)
     # elif opt in ('--kill'):
     #     if isds9up('modsView'):
@@ -1413,7 +1352,7 @@ else:
 # Get the name of the MODS script to view
 
 if not os.path.isfile(inFile):
-    print('\n**ERROR: Could not find MODS script file %s\n' % (inFile))
+    print(f"\n**ERROR: Could not find MODS script file {inFile}\n")
     sys.exit(1)
 
 (fileRoot,fileExt) = os.path.splitext(inFile)
@@ -1421,20 +1360,20 @@ if not os.path.isfile(inFile):
 # If using an MMS file, make sure it exists
 
 if showMMS and not os.path.isfile(mmsFile):
-    print('\n**ERROR: Could not open MMS file %s\n' % (mmsFile))
+    print(f"\n**ERROR: Could not open MMS file {mmsFile}")
     sys.exit(1)
 
 # Check the magnitude limits and make sure they are logical
 
 if maxMag > minMag:
-    print('\n**ERROR: Invalid magnitude limits - min=%.1f max=%.1f' % (minMag,maxMag))
+    print(f"\n**ERROR: Invalid magnitude limits - min={minMag:.1f} max={maxMag:.1f}")
     print('         maxMag (bright) must be less than minMag (faint)!\n')
     sys.exit(1)
 
 # This program works with .acq and .img files, not .obs files
 
 if fileExt == '.obs':
-    print('\n**ERROR: %s is a MODS observing script.' % (inFile))
+    print(f"\n**ERROR: {inFile} is a MODS observing script.")
     print('         modsView only works with MODS .acq or .img scripts\n')
     sys.exit(1)
 
@@ -1468,8 +1407,7 @@ for i in range(len(fileLines)):
     if not testStr.startswith('#') and len(strBits)>0:
         if strBits[0].upper() == 'OBJCOORDS':
             if len(strBits)<3:
-                print('\n**ERROR: OBJCOORDS has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: OBJCOORDS has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasTarget = True
             tRAStr = strBits[1]
@@ -1479,8 +1417,7 @@ for i in range(len(fileLines)):
             targDec = sex2dec(strBits[2])
         elif strBits[0].upper() == 'GUICOORDS':
             if len(strBits)<3:
-                print('\n**ERROR: GUICOORDS has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: GUICOORDS has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasGStar = True
             gRAStr = strBits[1]
@@ -1490,23 +1427,20 @@ for i in range(len(fileLines)):
             gsDec = sex2dec(strBits[2])
         elif strBits[0].upper() == 'POSANGLE':
             if len(strBits)<2:
-                print('\n**ERROR: POSANGLE has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: POSANGLE has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasPosAng = True
             posAng = float(strBits[1])
         elif strBits[0].upper() == 'ROTATOR':
             if len(strBits)<3:
-                print('\n**ERROR: ROTATOR has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: ROTATOR has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasPosAng = True
             posAng = float(strBits[1])
             print('\n**NOTE: ROTATOR is deprecated, please use POSANGLE xy.z')
         elif strBits[0].upper() == 'OFFSET':
             if len(strBits)<4:
-                print('\n**ERROR: OFFSET has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: OFFSET has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasOffset = True
             offsetRA = float(strBits[1])
@@ -1514,8 +1448,7 @@ for i in range(len(fileLines)):
             offsetType = strBits[3].lower()
         elif strBits[0].upper() == 'OFFSETXY':
             if len(strBits)<4:
-                print('\n**ERROR: OFFSETXY has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: OFFSETXY has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             hasOffsetXY = True
             offsetX = float(strBits[1])
@@ -1525,8 +1458,7 @@ for i in range(len(fileLines)):
             objName = testStr.split(None,1)[1]
         elif strBits[0].upper() == 'SLITMASK':
             if len(strBits)<2:
-                print('**ERROR: SLITMASK has insufficient arguments')
-                print('         %s' % (testStr))
+                print(f"\n**ERROR: SLITMASK has insufficient arguments:\n         {testStr}")
                 sys.exit(1)
             slitMask = strBits[1]
             hasSlitMask = True
@@ -1590,29 +1522,29 @@ else:
 
 # Print a summary:
 
-print('\nMODS %s Script: %s' % (fileExt,inFile))
+print(f"\nMODS {fileExt} Script: {inFile}")
 print('\nSummary:')
-print('      Object: %s' % (objName))
-print('      Coords: %s %s' % (tRAStr,tDecStr))
+print(f"      Object: {objName}")
+print(f"      Coords: {tRAStr} {tDecStr}")
 
 if hasPosAng:
-    print('  Rotator PA: %.1f deg' % (posAng))
+    print(f"  Rotator PA: {posAng:.1f} deg")
 else:
-    print('  Rotator PA not given, assuming 0 degrees, select in interactive mode')
+    print("  Rotator PA not given, assuming 0 degrees")
     posAng = 0.0
 
 if hasGStar:
-    print('  Guide Star: %s %s' % (gRAStr,gDecStr))
+    print(f"  Guide Star: {gRAStr} {gDecStr}")
 else:
     if findGStars:
-        print('  Guide Star: NONE - search requested')
+        print("  Guide Star: NONE - search requested")
     else:
-        print('  Guide Star: NONE')
+        print("  Guide Star: NONE")
 
-print('  AGw Filter: %s' % (agwFilt))
+print(f"  AGw Filter: {agwFilt}")
 
 if hasSlitMask:
-    print('   Slit Mask: %s' % (slitMask))
+    print(f"   Slit Mask: {slitMask}")
     if slitMask.upper().startswith('LS'):
         showSlit = True
     else:
@@ -1621,13 +1553,13 @@ else:
     print('   Slit Mask: None')
     showSlit = False
 
-print(' Acquisition: %s Camera, %s Filter, Exp=%.1f sec' % (acqCamera,acqFilter,acqExpTime))
+print(f" Acquisition: {acqCamera} Camera, {acqFilter} Filter, Exp={acqExpTime:.1f} sec")
 
 if hasOffset:
-    print('RADEC Offset: dRA=%.2f arcsec dDec=%.2f arcsec type=%s' % (offsetRA,offsetDec,offsetType))
+    print(f"RADEC Offset: dRA={offsetRA:.2f} arcsec dDec={offsetDec:.2f} arcsec type={offsetType}")
         
 elif hasOffsetXY:
-    print('DETXY Offset: dX=%.2f arcsec dY=%.2f arcsec type=%s' % (offsetX,offsetY,offsetType))
+    print(f"DETXY Offset: dX={offsetX:.2f} arcsec dY={offsetY:.2f} arcsec type={offsetType}")
     
 # Compute the position of the guide star in standard coordinates
 # (xi,eta) relative to the target at the science field center
@@ -1685,7 +1617,7 @@ if hasGStar:
 if not showField:
     sys.exit(0)
 
-# Setup the DS9 instance to make it look distinctive
+# Setup the DS9 instance to make it look distinctive - v3 SAMP-based ds9 interface
 
 disp = DS9('modsView')
 disp.set('width 800')
@@ -1695,9 +1627,8 @@ disp.set('frame clear all')
 disp.set('view image no')        # redundant pixel readout
 disp.set('view colorbar no')     # don't need color bar
 
-# If using a DSS image, retrieve and display it, otherwise display the
-# FITS file given on the command line (provisional, other ways to do
-# this
+# If using a DSS image, retrieve and display it, otherwise display the FITS 
+# file given on the command line (provisional, other ways to do this)
 
 print('\nDisplaying MODS sky view:')
 if useDSS:
@@ -1734,6 +1665,8 @@ if alignWCS:
 else:
     disp.set('wcs align no')
 
+# derotate to image rather than celestial orientation
+
 if alignMODS:
     disp.set(f"rotate {-posAng:.2f}")
 
@@ -1761,12 +1694,11 @@ disp.set(f"regions file {regFile}")
 numStars = 0
 catUp = False
 if showCat:
-    ds9cmd = 'catalog %s' % starCat
     disp.set(f"catalog {starCat}")
     disp.set(f"catalog filter ${starMag}<{minMag:.2f}&&${starMag}>{maxMag:.2f}")
     disp.set(f"catalog symbol text ${starMag}")
-    catFile = str(Path.cwd() / f"{fileRoot}_{starCat}.cat")
-    
+
+    catFile = str(Path.cwd() / f"{fileRoot}_{starCat}.cat")   
     disp.set(f"catalog export tsv {catFile}")
     catUp = True
 
@@ -1785,14 +1717,14 @@ if showCat:
     if hasGStar:
         iFound = findStar(gsRAd,gsDec,catRAd,catDec,catRadius)
         if iFound < 0:
-            print('  NB: No star found in the %s catalog within the magnitude limits' % (catID))
+            print(f'  NB: No star found in the {catID} catalog within the magnitude limits')
         else:
             raStar = catRAd[iFound]/15.0
             decStar = catDec[iFound]
             print('\nGuide Star Catalog Info:')
-            print('  Star ID: %s %s' % (catID,catName[iFound]))
-            print('   Coords: %s %s' % (dec2sex(raStar),dec2sex(decStar)))
-            print('     Phot: R=%.2f B=%.2f' % (catRmag[iFound],catBmag[iFound]))
+            print(f" Star ID: {catID} {catName[iFound]}")
+            print(f"   Coords: {dec2sex(raStar)} {dec2sex(decStar)}")
+            print(f"     Phot: R={catRmag[iFound]:.2f} B={catBmag[iFound]:.2f}")
 
     # If asked to find candidate guide stars, print the list here and
     # ask them to pick one.
@@ -1869,7 +1801,7 @@ if showCat:
                     hasGStar = True
                     hasPicked = True
                 else:
-                    print('*** Star %d is not in the candidate list ***' % (iPick+1))
+                    print(f"*** Star {iPick+1} is not in the candidate list ***")
                     hasPicked = False
             except ValueError:
                 if len(s) > 0:
