@@ -122,7 +122,7 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '3.0.1'
+versNum  = '3.0.2'
 versDate = '2025-02-06'
 
 # Some useful global defaults (mostly so we can report them in usage)
@@ -252,14 +252,14 @@ class DS9():
         return None
     
     
-    def set(self,cmdStr):
+    def set(self,*args):
         '''
         Send a commmand to the ds9 instance
 
         Parameters
         ----------
-        cmdStr : string
-            SAOImage ds9 set command to send
+        *args : string(s)
+            SAOImage ds9 set command string(s) to send
 
         Raises
         ------
@@ -272,18 +272,26 @@ class DS9():
         -------
         None.
 
+        Description
+        -----------
+        Executes one or more ds9.set commands on the current named
+        ds9 app. If more than one set command is desired, put them
+        separated by commas.
+        
         '''
         
-        if len(cmdStr) == 0:
-            return        
+        if len(args) == 0:
+            return  
         
-        if self.haveDS9:
-            try:
-                self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
-            except Exception as exp:
-                raise ValueError(f"ds9 set command {cmdStr} returned error: {exp}")
-        else:
+        if not self.haveDS9:
             raise RuntimeError(f"named ds9 instance {self.ds9ID} not connected")
+
+        for cmdStr in args:
+            if len(cmdStr) > 0:
+                try:
+                    self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
+                except Exception as exp:
+                    raise ValueError(f"ds9 set command {cmdStr} returned error: {exp}")
 
     
     def get(self,cmdStr):
@@ -305,6 +313,13 @@ class DS9():
         dictionary
             SAMP dictionary with the return from the ds9.get command.
 
+        Description
+        -----------
+        Sends the attached ds9 instance a ds9.get command and waits
+        for the response or timeout.  Because get delivers a response
+        that presumably the user wants to act upon, unlike set() this
+        method only supports one get directive at a time.
+        
         See Also
         --------
         getCursKey() for a function that uses this for cursor interaction
@@ -1629,12 +1644,14 @@ if not showField:
 # Setup the DS9 instance to make it look distinctive - v3 SAMP-based ds9 interface
 
 disp = DS9('modsView')
-disp.set('width 800')
-disp.set('height 800')
-disp.set('frame clear all')
+
+disp.set("width 800","height 800","frame clear all","view image no","view colorbar no")
+#disp.set('width 800')
+#disp.set('height 800')
+#disp.set('frame clear all')
 #disp.set('view layout vertical') # look very different from generic ds9
-disp.set('view image no')        # redundant pixel readout
-disp.set('view colorbar no')     # don't need color bar
+#disp.set('view image no')        # redundant pixel readout
+#disp.set('view colorbar no')     # don't need color bar
 
 # If using a DSS image, retrieve and display it, otherwise display the FITS 
 # file given on the command line (provisional, other ways to do this)
@@ -1651,17 +1668,17 @@ if useDSS:
         print(f"*** ERROR: Could not connect to the image server, aborting: {exp}")
         sys.exit(1)
 
-    disp.set(f"{imgServer} close")
-    disp.set("scale mode 99.5")
+    disp.set(f"{imgServer} close","scale mode 99.5")
+    #disp.set("scale mode 99.5")
 else:
     print(f"  Displaying FITS image {fitsFile}")
-    disp.set(f"file fits {fitsFile}")
-    disp.set("scale mode zscale")
+    disp.set(f"file fits {fitsFile}","scale mode zscale")
+    #disp.set("scale mode zscale")
 
 # Clear any regions, reset display and zoom
 
-disp.set("regions delete all")
-disp.set("scale linear")
+disp.set("regions delete all","scale linear")
+#disp.set("scale linear")
 
 # Grid and WCS alignment options...
 
