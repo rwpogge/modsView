@@ -127,7 +127,15 @@ Experimental and unstable alpha version, **not for general use yet**, that
 replaces the no longer supported `pyds9` with SAMP interaction with
 ds9 using `astropy.samp`.  
 
-Testing is in progress as of 2025 Feb 5
+<dl>
+ <dt>Version 3.0.1 (2025 Feb 6) - SAMP version</dt>
+ <dd>Replaces the pyds9 which was archived in 2024 Jan and no longer supported
+ with code to perform all ds9 interaction using the SAMP interface, implemented
+ using the astropy.samp package.  This is the first beta release: all functions
+ are present and it passed my basic tests.  Added one new feature: after guide
+ star selection you have the option of saving a copy of an acquisition file with
+ the selected guide star, name is oldACQ_new.acq, adding _new.</dd>
+</dl>
 
 ### Version 2
 
