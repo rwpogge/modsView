@@ -55,11 +55,15 @@ since there were significant internal changes in 2021.
 
 ### Required Packages
 
-modsView requires the following packages:
+modsView v2 requires the following packages:
 
- * [pyds9](https://github.com/ericmandel/pyds9)
- * [ds9](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
- * [xpa](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
+ * [`pyds9`](https://github.com/ericmandel/pyds9)
+ * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
+ * [`xpa`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
+
+modsView v3 will require the following packages:
+ * `astropy.samp` (replaces `pyds9` and `xpa` for `ds9` interaction)
+ * `astropy.coordinates` (SkyCoord and Angle)
 
 ### Python 3 Required
 
