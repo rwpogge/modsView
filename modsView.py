@@ -98,6 +98,7 @@ Modification History
    2022 Nov 11 - Updated for changes in XPA with ds9 version 8.x [rwp/osu]
 
    2025 Feb 05 - Switched to astropy.samp to use SAMP for ds9 interface [rwp/osu]
+   2025 Feb 07 - Cleanup in ds9 interaction, various bug fixes [rwp/osu]
    
 '''
 
@@ -126,8 +127,8 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '3.0.2'
-versDate = '2025-02-06'
+versNum  = '3.0.3'
+versDate = '2025-02-07'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -295,9 +296,12 @@ class DS9():
         for cmdStr in args:
             if len(cmdStr) > 0:
                 try:
-                    self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
+                    sampRet = self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
                 except Exception as exp:
-                    raise ValueError(f"ds9 set command {cmdStr} returned error: {exp}")
+                    raise ValueError(f"set() error: {exp}")
+                
+                if sampRet["samp.status"] != "samp.ok":
+                    raise RuntimeError(f"ds9 set command returned error: {sampRet}")
 
     
     def get(self,cmdStr):
@@ -338,6 +342,10 @@ class DS9():
         if self.haveDS9:
             try:
                 sampRet = self.ds9.ecall_and_wait(self.clientID,"ds9.get","0",cmd=cmdStr)
+            except Exception as exp:
+                raise RuntimeError(f"get() error: {exp}")
+                
+            if sampRet['samp.status'] == 'samp.ok':
                 if "samp.result" in sampRet:
                     if "value" in sampRet["samp.result"]:
                         return sampRet["samp.result"]["value"]
@@ -345,8 +353,8 @@ class DS9():
                         return sampRet["samp.result"]
                 else:
                     return sampRet
-            except Exception as exp:
-                raise RuntimeError(f"ds9 get command {cmdStr} returned error: {exp}")
+            else:
+                raise RuntimeError(f"ds9 get command {cmdStr} error: {sampRet}")
         else:
             raise RuntimeError(f"named ds9 instances {self.ds9ID} not connected")
 
