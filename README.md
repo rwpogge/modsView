@@ -52,8 +52,9 @@ modsView is written in Python 3 and has been tested on Linux and
 macOS.  Python 3 is required, and the programs have been used
 primarily with Python v3.7 and up.
 
-The latest version requires the most recent versions of ds9 and xpa,
-since there were significant internal changes in 2021.
+The latest version (v3) requires the most recent versions of SAOImage ds9
+and astropy, but no longer uses xpa and pyds9. If you use v2, see the separate 
+dependencies.
 
 ### Required Packages
 
