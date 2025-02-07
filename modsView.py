@@ -194,6 +194,8 @@ class DS9():
         self.clientID = None
         self.haveDS9 = False
         
+        self.ds9cmd = f"ds9 -samp -xpa no -fifo none -port none -unix none -title {self.ds9ID}"
+        
         try:
             self.ds9.connect()
             self.connected = self.ds9.is_connected
@@ -201,7 +203,7 @@ class DS9():
             if self.clientID:
                 self.haveDS9 = True
             else:
-                subprocess.Popen(shlex.split(f"ds9 -samp -fifo none -port none -unix none -title {self.ds9ID}"))
+                subprocess.Popen(shlex.split(self.ds9cmd))
                 time.sleep(5)
                 self.clientID = self.getID()
                 if not self.clientID:
@@ -210,7 +212,7 @@ class DS9():
                     self.connected = self.ds9.is_connected
                     
         except SAMPHubError:
-            subprocess.Popen(shlex.split(f"ds9 -samp -fifo none -port none -unix none -title {self.ds9ID}"))
+            subprocess.Popen(shlex.split(self.ds9cmd))
             time.sleep(5)
             try:
                 self.ds9.connect()
