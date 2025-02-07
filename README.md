@@ -30,7 +30,9 @@ used to allow display of multi-slit mask apertures given an MMS file.
 The --shadow option will overlay a depiction of the region of the
 focal plane shadowed by the AGw guide pickoff probe, and show the
 effective fields-of-view of the guide camera and wavefront sensor
-cameras.
+cameras.  **It is not meant to be exact as both MODS differ in 
+detail**.  It is meant for guidance.  If your is getting close to the
+guide probe, move away.
 
 The --finder option creates a PNG-format finding chart suitable for
 use with Phase 2 program submission.
