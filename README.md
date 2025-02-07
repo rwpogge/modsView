@@ -68,8 +68,8 @@ to the latest version because of many changes related to SAMP support starting w
 use to correctly identify the named ds9 instance (when they started including the title in the
 SAMP metadata).
 
-astropy.samp works even back to v5.3.4, but you should be at least v6.0 (no need for v7.0 unless
-you like bleeding edge).
+astropy.samp works even back to astropy v5.3.4 and python 3.10, but you should be at least v6.0 or v7.0, and
+correct operation is verified on Mac up to python v3.12.2 and astropy 7.0.0
 
 #### modsView v2 (pre-2025)
 
