@@ -127,8 +127,8 @@ except NameError:
 
 # Version number and date, update as needed
 
-versNum  = '3.0.2'
-versDate = '2025-02-06'
+versNum  = '3.0.3'
+versDate = '2025-02-07'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -301,7 +301,7 @@ class DS9():
                     raise ValueError(f"set() error: {exp}")
                 
                 if sampRet["samp.status"] != "samp.ok":
-                    raise RuntimeError(f"ds9 set command returned error: {sampRet}")
+                    raise RuntimeError(f"Error: set() - {sampRet['samp.error']['samp.errortxt']}")
 
     
     def get(self,cmdStr):
@@ -354,7 +354,7 @@ class DS9():
                 else:
                     return sampRet
             else:
-                raise RuntimeError(f"ds9 get command {cmdStr} error: {sampRet}")
+                raise RuntimeError(f"Error: get() - {sampRet['samp.error']['samp.errortxt']}")
         else:
             raise RuntimeError(f"named ds9 instances {self.ds9ID} not connected")
 
