@@ -78,16 +78,13 @@ modsView v2 requires the following packages:
  * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
  * [`xpa`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
 
-
-
 ### Python 3 Required
 
-With Python 2 sunsetting on 2022 Jan 1, we now require Python 3 for
-all versions of modsView moving forwrd.  The current version has been
-verified to run on Python 3 (v3.9.13, anaconda distro), using the
-latest releases of pyds9. We no longer support modsView under Python
-2.
+After Python 2 was sunsetted on 2022 Jan 1, we require Python 3 for all versions of modsView.  The current version (v3 and backwards v2) have been
+verified to run on Python 3 (v3.12.x, anaconda distro), but modsView v2 uses pyds9 which is no longer maintained (if you have it and it works, great, but
+no guarantees how long that will last).
 
+We no longer support modsView under Python 2.
 
 ## Installation
 
