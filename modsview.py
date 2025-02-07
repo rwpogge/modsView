@@ -296,9 +296,12 @@ class DS9():
         for cmdStr in args:
             if len(cmdStr) > 0:
                 try:
-                    self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
+                    sampRet = self.ds9.ecall_and_wait(self.clientID,"ds9.set","10",cmd=cmdStr)
                 except Exception as exp:
-                    raise ValueError(f"ds9 set command {cmdStr} returned error: {exp}")
+                    raise ValueError(f"set() error: {exp}")
+                
+                if sampRet["samp.status"] != "samp.ok":
+                    raise RuntimeError(f"ds9 set command returned error: {sampRet}")
 
     
     def get(self,cmdStr):
