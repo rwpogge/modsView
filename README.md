@@ -74,12 +74,14 @@ SAMP metadata).
 astropy.samp works even back to astropy v5.3.4 and python 3.10, but you should be at least v6.0 or v7.0, and
 correct operation is verified on Mac up to python v3.12.2 and astropy 7.0.0
 
-#### modsView v2 (pre-2025)
+#### modsView_v2 (pre-2025)
 
-modsView v2 requires the following packages:
+modsView_v2 requires the following packages:
  * [`pyds9`](https://github.com/ericmandel/pyds9)
  * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
  * [`xpa`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
+
+We keep a copy of v2 on this repository for reference.  It will no longer be maintained.
 
 ### Python 3 Required
 
