@@ -55,16 +55,30 @@ since there were significant internal changes in 2021.
 
 ### Required Packages
 
-modsView v2 requires the following packages:
+#### modsView v3 (2025)
 
+modsView v3 will require the following packages:
+ * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.6++
+ * `astropy.samp` (replaces `pyds9` and `xpa` for `ds9` interaction)
+ * `astropy.coordinates` for celestial coordinates and conversions
+ * `astropy.units` for celestial coordinates
+
+We have verified that modsView v3 works with versions 8.6 up through 8.7b1, but recommend updating
+to the latest version because of many changes related to SAMP support starting with 8.6 that we
+use to correctly identify the named ds9 instance (when they started including the title in the
+SAMP metadata).
+
+astropy.samp works even back to v5.3.4, but you should be at least v6.0 (no need for v7.0 unless
+you like bleeding edge).
+
+#### modsView v2 (pre-2025)
+
+modsView v2 requires the following packages:
  * [`pyds9`](https://github.com/ericmandel/pyds9)
  * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.2++
  * [`xpa`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v2.1.20++
 
-modsView v3 will require the following packages:
- * `astropy.samp` (replaces `pyds9` and `xpa` for `ds9` interaction)
- * `astropy.coordinates` for celestial coordinates and conversions
- * `astropy.units` for celestial coordinates
+
 
 ### Python 3 Required
 
