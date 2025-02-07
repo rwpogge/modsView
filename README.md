@@ -157,9 +157,6 @@ Our SAMP implementation uses astropy.samp
 
 ### Version 2
 
-This is the current operational version of modsView to support MODS1+MODS2
-Binocular operations
-
 <dl>
 <dt>Version 2.2.1 (2022 Nov 11) - Python 3 version
 <dd>Now only supporting Python 3, and made changes to XPA commands needed to match
