@@ -71,6 +71,12 @@ to the latest version because of many changes related to SAMP support starting w
 use to correctly identify the named ds9 instance (when they started including the title in the
 SAMP metadata).
 
+Starting with version 3 we are using the SAMP messaging protocol (https://www.ivoa.net/documents/SAMP/) to interact with ds9 as pyds9 is 
+no longer supported.  We are adopting the astropy.samp implementation (https://docs.astropy.org/en/stable/samp/) for development.  Note that a 
+parallel SAMP/ds9 development is in progress at LBTO and later revisions will likely converge on that as the base ds9 interface.  All still a 
+work-in-progress.  This version is designed to be mostly self-contained to address a short term need to bridge the gap between the
+end of pyds9 and a generic SAMP interface moving forward.
+
 astropy.samp works even back to astropy v5.3.4 and python 3.10, but you should be at least v6.1 or v7.0, and
 correct operation is verified on Mac up to python v3.12.2 and astropy 7.0.0 (2025 Feb).  If you update astropy
 to 7.0.x, you'll also need at least python 3.11 (though again, it does work as noted at lower levels, just won't
