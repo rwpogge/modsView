@@ -151,6 +151,7 @@ defSurvey  = 'all'   # default is the STScI composite survey image catalog
 from astropy.samp import SAMPIntegratedClient, SAMPHubError
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
+import time
 
 # DS9 class
 
@@ -187,6 +188,8 @@ class DS9():
         
         self.ds9ID = ds9ID
         
+        self.launchWait = 5 # time to wait for ds9 launch in seconds
+        
         # instantiate a SAMPIntegratedClient instance
         
         self.ds9 = SAMPIntegratedClient(name=f"myDS9_{ds9ID}",description="myDS9 instance")
@@ -205,7 +208,7 @@ class DS9():
                 self.haveDS9 = True
             else:
                 subprocess.Popen(shlex.split(self.ds9cmd))
-                time.sleep(5)
+                time.sleep(self.launchWait)                    
                 self.clientID = self.getID()
                 if not self.clientID:
                     raise RuntimeError(f"Failed to start ds9 for {self.ds9ID}, aborting")
@@ -214,7 +217,7 @@ class DS9():
                     
         except SAMPHubError:
             subprocess.Popen(shlex.split(self.ds9cmd))
-            time.sleep(5)
+            time.sleep(self.launchWait)
             try:
                 self.ds9.connect()
                 self.clientID = self.getID()
@@ -412,7 +415,25 @@ class DS9():
         else:
             return cursData
     
+    
+    def alive(self):
+        '''
+        See if the ds9 client is active
 
+        Returns
+        -------
+        bool
+            True if active, False if not
+
+        '''
+        
+        try:
+            self.ds9.enotify(self.clientID,"samp.app.ping")
+            return True
+        except:
+            return False
+        
+            
 #------------------
 #
 # replacements for coordinate conversions using astropy
