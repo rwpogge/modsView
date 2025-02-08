@@ -125,19 +125,14 @@ AST-1108693.
 
 ## macOS Notes
 
-We've tested this on macOS 10.14 and later, and macOS 11 and 12.  It
-does require having ds9 v8.2 or later and xpa v2.1.20 or later. It
-appears to work better with the X11 versions of ds9 instead of Aqua,
-and confirm that BigSur ARM64 X11 works fine with macOS Monterey (on
-Intel and M1).
-
+We've tested this on macOS 10.14 and later, and macOS 11, 12, and 13.  It does require having ds9 v8.5 or later and verified with astropy v6.x and v7.x
+to date. It appears to work better with the X11 versions of ds9 instead of Aqua, and confirm that BigSur ARM64 X11 works fine with macOS Monterey 
+(on Intel and Apple silicon).
 
 ## Release Notes
 
-These notes are chronological from most recent to oldest
-releases. Older copies of modsView are available below, but we
-strongly recommend that you only download the latest version. This is
-the version that is installed at LBT.
+These notes are chronological from most recent to oldest releases. Older copies of modsView are available below, but we
+strongly recommend that you only download the latest version. This is the version that is installed at LBT.
 
 ### Version 3
 
