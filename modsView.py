@@ -36,8 +36,12 @@ Dependencies
    https://sites.google.com/cfa.harvard.edu/saoimageds9
 
    Starting with version 3 we are using the SAMP messaging protocol
-   to interact with ds9 as pyds9 is no longer supported.  We are adopting
-   the astropy.samp implementatino.
+   (https://www.ivoa.net/documents/SAMP/) to interact with ds9 as pyds9 is 
+   no longer supported.  We are adopting the astropy.samp implementation
+   (https://docs.astropy.org/en/stable/samp/) for development.  Note that a 
+   parallel SAMP/ds9 development is in progress at LBTO and later revisions 
+   will likely converge on that as the base ds9 interface.  All still a 
+   work-in-progress.  This version is designed to be mostly self-contained.
 
 Distribution
 ------------
