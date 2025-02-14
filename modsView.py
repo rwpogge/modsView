@@ -1894,10 +1894,11 @@ if makeFinder:
 # Make a copy of the script with the new guide star selection?
 
 if saveScript:
-    newFile = f"{acqRoot}_new{acqExt}"
-    if os.path.exists(newFile):
-        os.remove(newFile)
-    nf = open(newFile,'w')
+    bakFile = f"{acqFile}.bak"
+    os.rename(acqFile,bakFile)
+    if os.path.exists(acqFile):
+        os.remove(acqFile)
+    nf = open(acqFile,'w')
     for acqLine in acqLines:
         if "guiname" in acqLine.lower():
             nf.write(f"  {newGUINAME}\n")
@@ -1906,9 +1907,9 @@ if saveScript:
         else:
             nf.write(f"{acqLine}")
     nf.close()
-    print(f"Wrote modified {acqExt} script {newFile}")
-    
-# Cleanup: remove delinquent catalog files, close open catalog tools, etc.
+    print(f"Wrote modified {acqExt} script {acqFile}")
+  
+# cleanup: remove delinquent catalog files, close open catalog tools, etc.
 
 if os.path.isfile(catFile):
     if keepCat:
@@ -1916,6 +1917,9 @@ if os.path.isfile(catFile):
     else:
         os.remove(catFile)
 
+if os.path.isfile(regFile):
+    os.remove(regFile)
+    
 if showCat:
     try:
         disp.set('catalog close')
