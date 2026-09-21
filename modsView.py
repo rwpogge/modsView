@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 #
-# Typical System: /usr/bin/env python
-# LBT MODS runtime: /lbt/mods_runtime/anaconda/bin/python
-'''
-modsView - View a MODS target acquisition (.acq) or imaging (.img) script
+
+'''modsView - View a MODS target acquisition (.acq) or imaging (.img) script
 
 Description
 ----------- 
@@ -36,12 +34,16 @@ Dependencies
    https://sites.google.com/cfa.harvard.edu/saoimageds9
 
    Starting with version 3 we are using the SAMP messaging protocol
-   (https://www.ivoa.net/documents/SAMP/) to interact with ds9 as pyds9 is 
-   no longer supported.  We are adopting the astropy.samp implementation
-   (https://docs.astropy.org/en/stable/samp/) for development.  Note that a 
-   parallel SAMP/ds9 development is in progress at LBTO and later revisions 
-   will likely converge on that as the base ds9 interface.  All still a 
-   work-in-progress.  This version is designed to be mostly self-contained.
+   (https://www.ivoa.net/documents/SAMP/) to interact with ds9 as
+   pyds9 is no longer supported.  We are adopting the pyvo.samp
+   implementation (was astropy.samp) for development.  Note that a
+   parallel SAMP/ds9 development is in progress at LBTO and later
+   revisions will likely converge on that as the base ds9 interface.
+   All still a work-in-progress.  This version is designed to be
+   mostly self-contained.
+
+   With astropy 8.0 we need to use pyvo.samp as astropy.samp is
+   deprecated and will soon vanish.
 
 Distribution
 ------------
@@ -103,7 +105,8 @@ Modification History
 
    2025 Feb 05 - Switched to astropy.samp to use SAMP for ds9 interface [rwp/osu]
    2025 Feb 07 - Cleanup in ds9 interaction, various bug fixes [rwp/osu]
-   
+   2026 Sep 21 - testing pyvo.samp which replaces astropy.samp [rwp/osu]
+
 '''
 
 import sys
@@ -114,6 +117,11 @@ import subprocess
 import shlex
 import time
 
+# Version number and date, update as needed
+
+versNum  = '3.0.4'
+versDate = '2026-09-21'
+
 # makes paths agnostic of OS (mostly)
 
 from pathlib import Path
@@ -122,17 +130,24 @@ from pathlib import Path
 
 from operator import itemgetter
 
+# ds9 interaction using SAMP
+
+try:
+    from pyvo.samp import SAMPIntegratedClient, SAMPHubError
+except:
+    from astropy.samp import SAMPIntegratedClient, SAMPHubError
+
+# celestial coordinates and units
+
+from astropy.coordinates import SkyCoord, Angle
+import astropy.units as u
+
 # input vs raw_input for Python 3/2 compatibility
 
 try:
     input = raw_input
 except NameError:
     pass
-
-# Version number and date, update as needed
-
-versNum  = '3.0.3'
-versDate = '2025-02-07'
 
 # Some useful global defaults (mostly so we can report them in usage)
 
@@ -151,11 +166,6 @@ defSurvey  = 'all'   # default is the STScI composite survey image catalog
 #
 # internal functions and classes
 #
-
-from astropy.samp import SAMPIntegratedClient, SAMPHubError
-from astropy.coordinates import SkyCoord, Angle
-import astropy.units as u
-import time
 
 # DS9 class
 
@@ -248,7 +258,7 @@ class DS9():
 
         Description
         -----------
-        Uses the astropy.samp get_registered_client() and get_methdata()
+        Uses the SAMP get_registered_client() and get_methdata()
         methods to find the named ds9 window of interest.  The name
         attached to a ds9 process with the -title command-line argument
         is in the samp.name metadata parameter.  We require an exact
