@@ -1,6 +1,8 @@
 # modsView
 MODS Target Visualization and Guide Star Selection Tool
 
+**Updated: 2026 Sept 21**
+
 ## Overview
 
 modsView is a Python program that uses DS9 to view and verify the
@@ -58,29 +60,28 @@ dependencies.
 
 ### Required Packages
 
-#### modsView v3 (2025)
+#### modsView v3
 
 modsView v3 will require the following packages:
  * [`ds9`](https://sites.google.com/cfa.harvard.edu/saoimageds9/download) v8.6++
- * `astropy.samp` (replaces `pyds9` and `xpa` for `ds9` interaction)
+ * `pyvo.samp` (replaces `pyds9` and `xpa` for `ds9` interaction), can use `astropy.samp` if astropy version <8.x
  * `astropy.coordinates` for celestial coordinates and conversions
  * `astropy.units` for celestial coordinates
-
-We have verified that modsView v3 works with versions 8.6 up through 8.7b1, but recommend updating
-to the latest version because of many changes related to SAMP support starting with 8.6 that we
-use to correctly identify the named ds9 instance (when they started including the title in the
-SAMP metadata).
+ * `numpy` at least v2.x if using `astropy` v8 or later.
+We have verified that modsView v3 works with ds9 versions since 8.2. Please update to later than 8.6 at least
+as we can no longer guarantee back compatiblity with earlier versions.
 
 Starting with version 3 we are using the SAMP messaging protocol (https://www.ivoa.net/documents/SAMP/) to interact with ds9 as pyds9 is 
-no longer supported.  We are adopting the astropy.samp implementation (https://docs.astropy.org/en/stable/samp/) for development.  Note that a 
+no longer supported.  We are adopting the `pyvo.samp` implementation (https://docs.astropy.org/en/stable/samp/) for development.  Note that a 
 parallel SAMP/ds9 development is in progress at LBTO and later revisions will likely converge on that as the base ds9 interface.  All still a 
 work-in-progress.  This version is designed to be mostly self-contained to address a short term need to bridge the gap between the
 end of pyds9 and a generic SAMP interface moving forward.
 
-astropy.samp works even back to astropy v5.3.4 and python 3.10, but you should be at least v6.1 or v7.0, and
+`astropy.samp` works back to astropy v5.3.4 and python 3.10, but you should be at least v6.1 or v7.0, and
 correct operation is verified on Mac up to python v3.12.2 and astropy 7.0.0 (2025 Feb).  If you update astropy
 to 7.0.x, you'll also need at least python 3.11 (though again, it does work as noted at lower levels, just won't
-be sustainable with the next ds9 update).
+be sustainable with the next ds9 update).  `astropy.samp` was deprecated and folded into `pyvo.samp` with `astropy` v8.0
+and will vanish altogether in later versions.
 
 #### modsView_v2 (pre-2025)
 
