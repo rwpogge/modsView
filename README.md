@@ -148,16 +148,22 @@ v2 which used pyds9 which is no longer maintained. Using SAMP also
 eliminates using xpa which often had problems with recent macOS systems.
 Our SAMP implementation uses astropy.samp
 
-<dl>
- <dt>Version 3.0.2 (2025 Feb 6) - SAMP version</dt>
- <dd>Replaces the pyds9 which was archived in 2024 Jan and no longer supported
- with code to perform all ds9 interaction using the SAMP interface, implemented
- using the astropy.samp package.  This is the first release: all functions
- are present and it passed all basic tests.  Added one new feature: after guide
- star selection you have the option of saving a copy of an acquisition file with
- the selected guide star, name is oldACQ_new.acq, adding _new. (3.0.0 and 3.0.1 were
- never released).</dd>
-</dl>
+#### Version 3.0.4 (2026 Sep 21) - `pyvo.samp`
+
+Starting with `astropy` v8.0, `astropy.samp` is deprecated in favor of
+`pyvo.samp` into which `astropy.samp` has been folded.  The version
+released will try to import `pyvo.samp` and if not attempt `astropy.samp`
+for backwards compatibility.
+
+#### Version 3.0.2 (2025 Feb 6) - SAMP version
+
+Replaces the pyds9 which was archived in 2024 Jan and no longer supported
+with code to perform all ds9 interaction using the SAMP interface, implemented
+using the astropy.samp package.  This is the first release: all functions
+are present and it passed all basic tests.  Added one new feature: after guide
+star selection you have the option of saving a copy of an acquisition file with
+the selected guide star, name is oldACQ_new.acq, adding _new. (3.0.0 and 3.0.1 were
+never released).
 
 ### Version 2
 
